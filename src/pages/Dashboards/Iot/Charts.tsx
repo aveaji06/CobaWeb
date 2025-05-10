@@ -1,7 +1,8 @@
 import React from "react";
 import ReactApexChart from "react-apexcharts";
 import useChartColors from "Common/useChartColors";
-
+import useFirebasedata from "../../../hooks/historical";
+import dayjs from "dayjs";
 //import images 
 import logoSm from "assets/images/logo-sm.png";
 
@@ -88,6 +89,84 @@ const PerspectiveChart = ({ chartId }: any) => {
     );
 };
 
+
+
+// const LocationChart = ({ chartId }: any) => {
+//     const chartColors = useChartColors(chartId);
+    
+//     const { latestSuhuKandang ,latestkelembaban } = useFirebasedata(); // Ambil data suhu dari Firebase
+//     const datasensor = latestSuhuKandang;
+
+//     if (!datasensor) {
+//         return <p>Loading data...</p>;
+//     }
+
+//     // Format data untuk ApexCharts
+//     const formattedData = datasensor.map((item) => ({
+//         label: dayjs(item.tanggal.substring(0, 8), "YYYYMMDD").format("DD MMM YY"), // Format tanggal
+//         value: item.nilai,   // Gunakan nilai suhu
+//     }));
+
+
+    
+//     // Menghapus label x-axis yang duplikat tetapi tetap menampilkan semua data suhu
+//     const uniqueLabels = formattedData.map((item, index, self) =>
+//         index > 0 && item.label === self[index - 1].label ? "" : item.label
+//     );
+//     const series = [
+//         {
+//             name: "Suhu Kandang",
+//             data: formattedData.map((item) => item.value),
+//         },
+//     ];
+
+//     const options: any = {
+//         chart: {
+//             height: 350,
+//             type: "line",
+//             zoom: {
+//                 enabled: false
+//             },
+//             margin: {
+//                 left: 0,
+//                 right: 0,
+//                 top: 0,
+//                 bottom: 0
+//             },
+//             toolbar: {
+//                 show: false,
+//             },
+//         },
+//         stroke: {
+//             show: true,
+//             curve: "smooth",
+//             lineCap: "butt",
+//             width: 2,
+//             dashArray: 0,
+//         },
+//         dataLabels: {
+//             enabled: false
+//         },
+//         colors: chartColors, // Menggunakan warna dari useChartColors
+//         xaxis: {
+//             categories: uniqueLabels, // Gunakan label tanggal sebagai kategori X
+//         }
+//     };
+
+//     return (
+//         <div className="chart-container">
+//             <h2>Grafik Suhu Kandang</h2>
+//             <ReactApexChart
+//                 options={options}
+//                 series={series}
+//                 type="line"
+//                 height={350}
+//             />
+//         </div>
+//     );
+// };
+
+
 const LocationChart = ({ chartId }: any) => {
     const chartColors = useChartColors(chartId);
     const series = [{
@@ -141,6 +220,7 @@ const LocationChart = ({ chartId }: any) => {
         </React.Fragment>
     );
 };
+
 
 const InteractionChart = ({ chartId }: any) => {
     const chartColors = useChartColors(chartId);

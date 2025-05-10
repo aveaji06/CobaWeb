@@ -638,7 +638,7 @@ const UpcomingScheduledData = [
     {
         id: 2,
         date: "01",
-        month: "Sep",
+        month: "Jun",
         title: "Chicken Water will run out ",
         time: "09:57 AM",
         createdBy: "System"

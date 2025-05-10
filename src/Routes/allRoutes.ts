@@ -2,7 +2,7 @@
 import Analytics from "pages/Dashboards/Analytics";
 import Iot from "pages/Dashboards/Iot";
 import Ecommerce from "pages/Dashboards/Ecommerce";
-import Email from "pages/Dashboards/Email";
+import Email from "pages/Dashboards/Historical";
 import HRDashboard from "pages/Dashboards/HR";
 import SocialMediaDashboard from "pages/Dashboards/SocialMedia";
 

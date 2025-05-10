@@ -1,269 +1,196 @@
-import React from "react";
-
-
-
-
-import {Scale,LampCeiling,Regex,Vegan, Webhook, Atom,Coins, ListFilter, Thermometer, Droplets} from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import { Scale, LampCeiling, Regex, Vegan, Webhook, Atom, Coins, ListFilter, Thermometer, Droplets } from 'lucide-react';
 import CountUp from 'react-countup';
 import { Dropdown } from 'Common/Components/Dropdown';
 import { PerspectiveChart } from './Charts';
 import { Link } from 'react-router-dom';
 import ThreeDLoader from "./ThreeLoader";
 import GIF from "../../../assets/images/building.gif";
-import firebasedata from "../../../hooks/firebase";
+import useFirebasedata from "../../../hooks/firebase";
 
+// Define types for each sensor
+interface Sensor {
+  nilai: number;
+}
+
+// Define a type for the whole sensorData state
+interface SensorData {
+  suhu: Sensor | null;
+  kelembaban: Sensor | null;
+  cahaya: Sensor | null;
+  CO2: Sensor | null;
+  NH3: Sensor | null;
+  debu: Sensor | null;
+}
+
+// SensorCard Component with defined prop types
+interface SensorCardProps {
+  title: string;
+  icon: JSX.Element;
+  data: number | null;
+  unit: string;
+  color: string;
+  iconColor: string;
+}
+
+const SensorCard: React.FC<SensorCardProps> = ({ title, icon, data, unit, color, iconColor }) => {
+  return (
+    <div className={`order-2 md:col-span-6 lg:col-span-3 col-span-12 2xl:order-1 bg-${color}-100 dark:bg-${color}-500/20 card 2xl:col-span-2 group-data-[skin=bordered]:border-${color}-500/20 relative overflow-hidden`}>
+      <div className="card-body">
+        <ListFilter
+          className={`absolute top-0 size-32 stroke-1 text-${color}-200/50 dark:text-${color}-500/20 ltr:-right-10 rtl:-left-10`}
+        />
+        <div className={`flex items-center justify-center size-12 bg-${color}-500 rounded-md text-15 text-${iconColor}`}>
+          {icon}
+        </div>
+        <h5 className="mt-5 mb-2">
+          {data !== null ? (
+            <span>{data.toFixed(2)}</span>  // Displaying data with 2 decimal places
+          ) : (
+            <span>Loading...</span>
+          )}
+          {unit}
+        </h5>
+
+        <p className="text-slate-500 dark:text-slate-200">{title}</p>
+      </div>
+    </div>
+  );
+};
 
 const Widgets = () => {
-  const latestAmonia = firebasedata();
+  // Initialize state for sensor data with correct types
+  const [sensorData, setSensorData] = useState<SensorData>({
+    suhu: null,
+    kelembaban: null,
+    cahaya: null,
+    CO2: null,
+    NH3: null,
+    debu: null
+  });
+
+  // Generic function to fetch data for each sensor
+  const fetchSensorData = async (sensorType: string) => {
+    try {
+      const response = await fetch(`https://ta-ayam-be.vercel.app/api/latest/${sensorType}`);
+      const data = await response.json();
+
+      if (data && data.nilai !== undefined) {
+        setSensorData(prevData => ({
+          ...prevData,
+          [sensorType]: { nilai: data.nilai }
+        }));
+      }
+    } catch (error) {
+      console.error(`Fetch error for ${sensorType}:`, error);
+    }
+  };
+
+  useEffect(() => {
+    // Fetch data for all sensors on component mount
+    const sensorTypes = ['suhu', 'kelembaban', 'cahaya','NH3', 'CO2', 'debu'];
+    sensorTypes.forEach(sensorType => {
+      fetchSensorData(sensorType);  // Call the function to fetch the data
+    });
+
+    // Optionally, set up polling for real-time updates (every 1 second)
+    const intervalId = setInterval(() => {
+      sensorTypes.forEach(sensorType => {
+        fetchSensorData(sensorType);
+      });
+    }, 10000);  // 1 second interval
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(intervalId);
+
+  }, []);
 
   return (
     <React.Fragment>
-            {/* Add space here */}
-            <div className="mb-4"></div>  {/* This is an empty div to create space */}            {/* Add space here */}
-            <div className="mb-4"></div>  {/* This is an empty div to create space */}            {/* Add space here */}
-            <div className="mb-4"></div>  {/* This is an empty div to create space */}            {/* Add space here */}
-            <div className="mb-4"></div>  {/* This is an empty div to create space */}            {/* Add space here */}
-            <div className="mb-4"></div>  {/* This is an empty div to create space */}            {/* Add space here */}
-            <div className="mb-4"></div>  {/* This is an empty div to create space */}            {/* Add space here */}
-            <div className="mb-4"></div>  {/* This is an empty div to create space */}            {/* Add space here */}
-            <div className="mb-4"></div>  {/* This is an empty div to create space */}            {/* Add space here */}
-            <div className="mb-4"></div>  {/* This is an empty div to create space */}            {/* Add space here */}            {/* Add space here */}
-            <div className="mb-4"></div>  {/* This is an empty div to create space */}
-            <div
-                className="order-1 md:col-span-6 lg:col-span-3 col-span-12 2xl:order-1 bg-green-100 dark:bg-green-500/20 card 2xl:col-span-2 group-data-[skin=bordered]:border-green-500/20 relative overflow-hidden">
-                <div className="card-body">
-                    <ListFilter
-                        className="absolute top-0 size-32 stroke-1 text-green-200/50 dark:text-green-500/20 ltr:-right-10 rtl:-left-10"></ListFilter>
-                    <div
-                        className="flex items-center justify-center size-12 bg-green-500 rounded-md text-15 text-green-50">
-                        <Vegan/>
-                    </div>
-                    <h5 className="mt-5 mb-2">
-                        <CountUp end={100} className="counter-value"/>
-                    </h5>
-                    <p className="text-slate-500 dark:text-slate-200">Total Chicken</p>
-                </div>
-            </div>
+    {/* Space between cards */}
+    <div className="mb-4"></div>
 
+    {/* Temperature Card */}
+    <SensorCard
+      title="Avg Temperature"
+      icon={<Thermometer />}
+      data={sensorData.suhu?.nilai ?? 0}  // Fallback to 0 if null
+      unit="°"
+      color="orange"
+      iconColor="orange-50"
+    />
 
-            
-            <div
-                className="order-2 md:col-span-6 lg:col-span-3 col-span-12 2xl:order-1 bg-orange-100 dark:bg-orange-500/20 card 2xl:col-span-2 group-data-[skin=bordered]:border-orange-500/20 relative overflow-hidden">
-                <div className="card-body">
-                    <ListFilter
-                        className="absolute top-0 size-32 stroke-1 text-orange-200/50 dark:text-orange-500/20 ltr:-right-10 rtl:-left-10"></ListFilter>
-                    <div
-                        className="flex items-center justify-center size-12 bg-orange-500 rounded-md text-15 text-orange-50">
-                        <Thermometer/>
-                    </div>
-                    <h5 className="mt-5 mb-2">
-                        <CountUp end={25.17} decimals={2} className="counter-value"/>
-                        °</h5>
-                    <p className="text-slate-500 dark:text-slate-200">Avg Temperature</p>
-                </div>
-            </div>
-            <div
-                className="order-3 md:col-span-6 lg:col-span-3 col-span-12 2xl:order-1 bg-sky-100 dark:bg-sky-500/20 card 2xl:col-span-2 group-data-[skin=bordered]:border-sky-500/20 relative overflow-hidden">
-                <div className="card-body">
-                    <ListFilter
-                        className="absolute top-0 size-32 stroke-1 text-sky-200/50 dark:text-sky-500/20 ltr:-right-10 rtl:-left-10"></ListFilter>
-                    <div className="flex items-center justify-center size-12 rounded-md bg-sky-500 text-15 text-sky-50">
-                        <Coins/>
-                    </div>
-                    <h5 className="mt-5 mb-2">
-                        <CountUp className="counter-value" end={35} duration={3}/>Day / {' '}
-                        <CountUp className="counter-value" end={5} duration={3}/>Week
-                    </h5>
-                    <p className="text-slate-500 dark:text-slate-200">Latest Chicken Age</p>
-                </div>
-            </div>
-            <div
-                className="order-4 md:col-span-6 lg:col-span-3 col-span-12 2xl:order-1 bg-green-100 dark:bg-green-500/20 card 2xl:col-span-2 group-data-[skin=bordered]:border-green-500/20 relative overflow-hidden">
-                <div className="card-body">
-                    <ListFilter
-                        className="absolute top-0 size-32 stroke-1 text-green-200/50 dark:text-green-500/20 ltr:-right-10 rtl:-left-10"></ListFilter>
-                    <div
-                        className="flex items-center justify-center size-12 bg-green-500 rounded-md text-15 text-green-50">
-                        <Atom/>
-                    </div>
-                    <h5 className="mt-5 mb-2">
-                        <CountUp end={2500} decimals={0} className="counter-value"/> ppm
-                    </h5>
-                    <p className="text-slate-500 dark:text-slate-200">Kadar CO2</p>
-                </div>
-            </div>
-            <div
-                className="order-5 md:col-span-6 lg:col-span-3 col-span-12 2xl:order-1 bg-purple-100 dark:bg-purple-500/20 card 2xl:col-span-2 group-data-[skin=bordered]:border-purple-500/20 relative overflow-hidden">
-                <div className="card-body">
-                    <ListFilter
-                        className="absolute top-0 size-32 stroke-1 text-purple-200/50 dark:text-purple-500/20 ltr:-right-10 rtl:-left-10"></ListFilter>
-                    <div
-                        className="flex items-center justify-center size-12 bg-purple-500 rounded-md text-15 text-purple-50">
-                        <Webhook/>
-                    </div>
-                    <h5 className="mt-5 mb-2">
-                        <CountUp end={latestAmonia?.nilai || 0} decimals={2} className="counter-value"/> ppm
-                    </h5>
-                    <p className="text-slate-500 dark:text-slate-200">Kadar NH3</p>
-                </div>
-            </div>
+    {/* Humidity Card with fixed value */}
+    <SensorCard
+      title="Kelembaban"
+      icon={<Droplets />}
+      data={sensorData.kelembaban?.nilai ?? 0}  // Fixed value for now
+      unit="%"
+      color="blue"
+      iconColor="purple-50"
+    />
 
+    {/* Chicken Age Card with fixed value
+    <SensorCard
+      title="Latest Chicken Age"
+      icon={<Coins />}
+      data={35}  // Fixed value for now
+      unit="Day"
+      color="sky"
+      iconColor="blue-50"
+    /> */}
 
+    {/* CO2 Level Card with fixed value */}
+    <SensorCard
+      title="Kadar CO2"
+      icon={<Atom />}
+      data={sensorData.CO2?.nilai ?? 0}  // Fixed value for now
+      unit="ppm"
+      color="green"
+      iconColor="green-50"
+    />
 
-            <div
-                className="order-6 md:col-span-6 lg:col-span-3 col-span-12 2xl:order-1 bg-gray-100 dark:bg-gray-500/20 card 2xl:col-span-2 group-data-[skin=bordered]:border-Gray-500/20 relative overflow-hidden">
-                <div className="card-body">
-                    <ListFilter
-                        className="absolute top-0 size-32 stroke-1 text-gray-200/50 dark:text-gray-500/20 ltr:-right-10 rtl:-left-10"></ListFilter>
-                    <div
-                        className="flex items-center justify-center size-12 bg-gray-500 rounded-md text-15 text-gray-50">
-                        <Regex/>
-                    </div>
-                    <h5 className="mt-5 mb-2">
-                        <CountUp end={2} decimals={2} className="counter-value"/> ug/m³
-                    </h5>
-                    <p className="text-slate-500 dark:text-slate-200">Level Debu</p>
-                </div>
-            </div>
-            <div
-                className="order-7 md:col-span-6 lg:col-span-3 col-span-12 2xl:order-1 bg-blue-100 dark:bg-blue-500/20 card 2xl:col-span-2 group-data-[skin=bordered]:border-blue-500/20 relative overflow-hidden">
-                <div className="card-body">
-                    <ListFilter
-                        className="absolute top-0 size-32 stroke-1 text-blue-200/50 dark:text-blue-500/20 ltr:-right-10 rtl:-left-10"></ListFilter>
-                    <div
-                        className="flex items-center justify-center size-12 bg-blue-500 rounded-md text-15 text-purple-50">
-                        <Droplets/>
-                    </div>
-                    <h5 className="mt-5 mb-2">
-                        <CountUp end={70} decimals={2} className="counter-value"/> %
-                    </h5>
-                    <p className="text-slate-500 dark:text-slate-200">Kelembaban</p>
-                </div>
-            </div>
-            <div
-                className="order- md:col-span-6 lg:col-span-3 col-span-12 2xl:order-1 bg-yellow-100 dark:bg-yellow-500/20 card 2xl:col-span-2 group-data-[skin=bordered]:border-yellow-500/20 relative overflow-hidden">
-                <div className="card-body">
-                    <ListFilter
-                        className="absolute top-0 size-32 stroke-1 text-yellow-200/50 dark:text-yellow-500/20 ltr:-right-10 rtl:-left-10"></ListFilter>
-                    <div
-                        className="flex items-center justify-center size-12 bg-yellow-500 rounded-md text-15 text-yellow-50">
-                        <LampCeiling/>
-                    </div>
-                    <h5 className="mt-5 mb-2">
-                        <CountUp end={30} decimals={2} className="counter-value"/> Lux
-                    </h5>
-                    <p className="text-slate-500 dark:text-slate-200">Level Cahaya</p>
-                </div>
-            </div>
-            <div
-                className="order- md:col-span-6 lg:col-span-3 col-span-12 2xl:order-1 bg-pink-100 dark:bg-pink-500/20 card 2xl:col-span-2 group-data-[skin=bordered]:border-pink-500/20 relative overflow-hidden">
-                <div className="card-body">
-                    <ListFilter
-                        className="absolute top-0 size-32 stroke-1 text-pink-200/50 dark:text-pink-500/20 ltr:-right-10 rtl:-left-10"></ListFilter>
-                    <div
-                        className="flex items-center justify-center size-12 bg-pink-500 rounded-md text-15 text-purple-50">
-                        <Scale/>
-                    </div>
-                    <h5 className="mt-5 mb-2">
-                        <CountUp end={10} decimals={2} className="counter-value"/> Kg
-                    </h5>
-                    <p className="text-slate-500 dark:text-slate-200">Berat Ayam</p>
-                </div>
-            </div>
-            {/* <div
-                className="order- md:col-span-6 lg:col-span-3 col-span-12 2xl:order-1 bg-purple-100 dark:bg-purple-500/20 card 2xl:col-span-2 group-data-[skin=bordered]:border-purple-500/20 relative overflow-hidden">
-                <div className="card-body">
-                    <Kanban
-                        className="absolute top-0 size-32 stroke-1 text-purple-200/50 dark:text-purple-500/20 ltr:-right-10 rtl:-left-10"></Kanban>
-                    <div
-                        className="flex items-center justify-center size-12 bg-purple-500 rounded-md text-15 text-purple-50">
-                        <Donut/>
-                    </div>
-                    <h5 className="mt-5 mb-2">
-                        <CountUp end={15} decimals={2} className="counter-value"/> Kg
-                    </h5>
-                    <p className="text-slate-500 dark:text-slate-200">Sisa Pakan Ayam</p>
-                </div>
-            </div> */}
+    {/* NH3 Level Card with fixed value */}
+    <SensorCard
+      title="Kadar NH3"
+      icon={<Webhook />}
+      data={sensorData.NH3?.nilai ?? 0}  // Fixed value for now
+      unit="ppm"
+      color="purple"
+      iconColor="purple-50"
+    />
 
+    {/* Dust Level Card with fixed value */}
+    <SensorCard
+      title="Level Debu"
+      icon={<Regex />}
+      data={sensorData.debu?.nilai ?? 0}  // Fixed value for now
+      unit="ug/m³"
+      color="gray"
+      iconColor="gray-50"
+    />
 
+    {/* Lamp Level Card with fixed value */}
+    <SensorCard
+      title="Level Cahaya"
+      icon={<LampCeiling />}
+      data={sensorData.cahaya?.nilai ?? 0}  // Fixed value for now
+      unit="Lux"
+      color="yellow"
+      iconColor="yellow-50"
+    />
 
-
-            {/* Add space here */}
-            <div className="mb-4"></div>  {/* This is an empty div to create space */}
-
-
-            <div className="order-8 col-span-12 2xl:order-1 card 2xl:row-span-4 2xl:col-span-10">
-                <div className="card-body">
-                    <div className="items-center gap-2 mb-3">
-                        <h6 className="text-15 grow">Hardware Perspective</h6>
-
-                        {/* Image */}
-                        <img src={GIF} className={"pl-24"} alt="Example GIF"
-                             style={{maxWidth: '80%', maxHeight: '100%'}} key={Date.now()}/>
-
-                        {/* <button
-                            className="top-[34rem] left-[40rem] border-custom-300 absolute bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full flex items-center justify-center border-4">
-                            <Droplets/>
-                        </button>
-
-                        <button
-                            className="top-[36rem] left-[32rem] border-green-300 absolute bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-full flex items-center justify-center border-4">
-                            <BatteryMedium/>
-                        </button>
-
-                        <button
-                            className="top-[39rem] left-[56rem] border-red-300 absolute bg-red-400 hover:bg-red-600 text-white font-bold py-3 px-4 rounded-full flex items-center justify-center border-4">
-                            <Thermometer/>
-                        </button> */}
-
-                        {/* Progress Bar */}
-                        <div className="relative mb-4" style={{top: '-10rem'}}>
-                            <div className=" w-1/3 bg-slate-200 rounded-full h-3.5  dark:bg-zink-600">
-                                <div className="bg-red-300 h-3.5 rounded-full animate-progress relative"
-                                     style={{width: "67%"}}>
-                                    <div
-                                        className="absolute ltr:right-0 rtl:left-0 inline-block px-2 py-0.5 text-[10px] text-white bg-red-300 rounded -top-6 after:absolute after:border-4 ltr:after:right-1/2 rtl:after:left-1/2 after:-bottom-2 after:border-transparent after:border-t-red-300">
-                                        67%
-                                    </div>
-                                </div>
-                            </div>
-                            <p className="text-red-300 mb-1">Amount of chicken feed</p>
-                        </div>
-
-                        {/* Progress Bar */}
-                        <div className="relative mb-4" style={{top: '-10rem'}}>
-                            <div className=" w-1/3 bg-slate-200 rounded-full h-3.5  dark:bg-zink-600">
-                                <div className="bg-blue-400 h-3.5 rounded-full animate-progress relative"
-                                     style={{width: "45%"}}>
-                                    <div
-                                        className="absolute ltr:right-0 rtl:left-0 inline-block px-2 py-0.5 text-[10px] text-white bg-blue-400 rounded -top-6 after:absolute after:border-4 ltr:after:right-1/2 rtl:after:left-1/2 after:-bottom-2 after:border-transparent after:border-t-blue-400">
-                                        45%
-                                    </div>
-                                </div>
-                            </div>
-                            <p className="text-blue-400 mb-1">Amount of water</p>
-                        </div>
-
-                        {/* <div className="relative mb-4" style={{top: '-10rem'}}>
-                            <div className=" w-1/3 bg-slate-200 rounded-full h-3.5  dark:bg-zink-600">
-                                <div className="bg-green-500 h-3.5 rounded-full animate-progress relative"
-                                     style={{width: "50%"}}>
-                                    <div
-                                        className="absolute ltr:right-0 rtl:left-0 inline-block px-2 py-0.5 text-[10px] text-white bg-green-500 rounded -top-6 after:absolute after:border-4 ltr:after:right-1/2 rtl:after:left-1/2 after:-bottom-2 after:border-transparent after:border-t-green-500">
-                                        50%
-                                    </div>
-                                </div>
-                            </div>
-                            <p className="text-green-500 mb-1">Battery level</p>
-                        </div> */}
-                    </div>
-                </div>
-            </div>
-
-
-        </React.Fragment>
-    );
+    {/* Chicken Weight Card with fixed value */}
+    {/* <SensorCard
+      title="Berat Ayam"
+      icon={<Scale />}
+      data={10}  // Fixed value for now
+      unit="Kg"
+      color="pink"
+      iconColor="purple-50"
+    /> */}
+  </React.Fragment>
+  );
 };
 
 export default Widgets;

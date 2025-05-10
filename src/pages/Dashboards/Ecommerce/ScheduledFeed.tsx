@@ -71,7 +71,7 @@ const ScheduledFeed = () => {
                             </div>
 
                         </div>
-                        <div className="flex gap-3 p-2 mt-3 rounded-md bg-custom-500">
+                        {/* <div className="flex gap-3 p-2 mt-3 rounded-md bg-custom-500">
                             <div className="shrink-0">
                                 <img src={supportImg} alt="" className="h-24"/>
                             </div>
@@ -79,10 +79,14 @@ const ScheduledFeed = () => {
                                 <h6 className="mb-1 text-15 text-custom-50">Need Help ?</h6>
                                 <p className="text-custom-200">If you would like to learn more about chicken schedule</p>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>
+
+
+
+            
         </React.Fragment>
     );
 };

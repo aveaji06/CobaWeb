@@ -5,6 +5,7 @@ import Layout from 'Layout';
 import NonAuthLayout from "Layout/NonLayout"
 import AuthProtected from './AuthProtected';
 
+
 const RouteIndex = () => {
   return (
     <React.Fragment>

@@ -45,7 +45,7 @@ const menuData: any = [
     },
     {
         id: "perfect environment",
-        label: 'Perfect Environment',
+        label: 'Historical Data',
         link: "/dashboards-environment",
         icon: <ThermometerSun />,
 
@@ -79,7 +79,7 @@ const menuData2: any = [
     },
     {
         id: "all automatics",
-        label: 'Perfect Environment',
+        label: 'Historical Data',
         link: "/dashboards-environment",
         icon: <ThermometerSun />,
 

@@ -22,19 +22,19 @@ const Ecommerce = () => {
     return (
         <React.Fragment>
             <BreadCrumb title='All Automatic' pageTitle='Automatic' />
-            <div className="grid grid-cols-12 gap-x-5">
+            <div className="grid grid-cols-12 2xl:grid-cols-12 gap-x-2">
                 {/*<WelcomeWidget />*/}
                 <SalesRevenue />
-                <Widgets />
+                {/* <Widgets /> */}
 
-                <ScheduledFeed/>
-                <UpcomingFeed />
-
+                {/* <ScheduledFeed/>
+                <UpcomingFeed /> */}
+{/* 
                 <TrafficResources />
-                <OrderStatistics />
+                <OrderStatistics /> */}
 
-
-                <ProductsOrders />
+{/* 
+                <ProductsOrders /> */}
             </div>
         </React.Fragment>
     );
