@@ -45,7 +45,7 @@ const menuData: any = [
     },
     {
         id: "perfect environment",
-        label: 'Historical Data',
+        label: 'Data Forensik',
         link: "/dashboards-environment",
         icon: <ThermometerSun />,
 

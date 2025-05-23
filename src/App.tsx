@@ -6,11 +6,6 @@ import fakeBackend from "./helpers/AuthType/fakeBackend";
 import React from 'react';
 
 
-import useFirebasedata from "./hooks/firebase";
-import useThresholdCheck  from './utils/threshold';
-
-
-
 // Activating fake backend
 fakeBackend();
 
@@ -33,10 +28,6 @@ fakeBackend();
 
 
 function App() {
-  const { latestSuhuKandang } = useFirebasedata();
-
-  useThresholdCheck(latestSuhuKandang); 
-
   return (
     <RouteIndex />
   );

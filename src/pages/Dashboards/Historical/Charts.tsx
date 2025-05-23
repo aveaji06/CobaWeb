@@ -10,19 +10,30 @@ import { useState, useEffect } from 'react';
 
 
 
-const EnvironmentComparisonChartSuhu = ({ chartId }: any) => {
+const EnvironmentComparisonChartSuhu = ({ chartId, selectedDateRange }: any) => {
     const chartColors = useChartColors(chartId);
     const [datasensor, setSensorData] = useState<any[] | null>(null);
 
     useEffect(() => {
-        fetch('https://ta-ayam-be.vercel.app/api/sensor/suhu')
-            .then(res => res.json())
-            .then(data => {
-                console.log("Sensor Data Suhu:", data);
-                setSensorData(data);
-            })
-            .catch(error => console.error("Fetch error:", error));
-    }, []);
+        if (selectedDateRange) {
+            const startDate = selectedDateRange[0].toLocaleDateString();
+            const endDate = selectedDateRange[1].toLocaleDateString();
+            fetch(`http://127.0.0.1:5000/api/sensor/suhu?start_date=${startDate}&end_date=${endDate}`)
+                .then(res => res.json())
+                .then(data => {
+                    console.log("Sensor Data Suhu:", data);
+                    // Convert object to array if needed
+                    if (data && typeof data === 'object' && !Array.isArray(data)) {
+                        data = Object.entries(data).map(([key, value]) => ({
+                            tanggal: key,
+                            nilai: value,
+                        }));
+                    }
+                    setSensorData(data);
+                })
+                .catch(error => console.error("Fetch error:", error));
+        }
+    }, [selectedDateRange]);
 
     if (!datasensor) {
         return <p>Loading data suhu...</p>;
@@ -75,84 +86,32 @@ const EnvironmentComparisonChartSuhu = ({ chartId }: any) => {
     );
 };
 
-const EnvironmentComparisonChartKelembaban = ({ chartId }: any) => {
+
+
+const EnvironmentComparisonChartKelembaban = ({ chartId, selectedDateRange }: any) => {
     const chartColors = useChartColors(chartId);
     const [datasensor, setSensorData] = useState<any[] | null>(null);
 
     useEffect(() => {
-        fetch('https://ta-ayam-be.vercel.app/api/sensor/kelembaban')
-            .then(res => res.json())
-            .then(data => {
-                console.log("Sensor Data Kelembaban:", data);
-                setSensorData(data);
-            })
-            .catch(error => console.error("Fetch error:", error));
-    }, []);
-
-    if (!datasensor) {
-        return <p>Loading data kelembaban...</p>;
-    }
-
-    const formattedData = datasensor.map((item) => ({
-        label: dayjs(item.tanggal.substring(0, 8), "YYYYMMDD").format("DD MMM YY"),
-        value: item.nilai,
-    }));
-
-    const uniqueLabels = formattedData.map((item, index, self) =>
-        index > 0 && item.label === self[index - 1].label ? "" : item.label
-    );
-
-    const series = [
-        {
-            name: "Kelembaban Kandang",
-            data: formattedData.map((item) => item.value),
-        },
-    ];
-
-    const options: any = {
-        chart: {
-            height: 350,
-            type: "line",
-            zoom: { enabled: false },
-            toolbar: { show: false },
-        },
-        stroke: {
-            curve: "smooth",
-            width: 2,
-        },
-        dataLabels: { enabled: false },
-        colors: chartColors,
-        xaxis: {
-            categories: uniqueLabels,
+        if (selectedDateRange) {
+            const startDate = selectedDateRange[0].toLocaleDateString();
+            const endDate = selectedDateRange[1].toLocaleDateString();
+            fetch(`http://127.0.0.1:5000/api/sensor/kelembaban?start_date=${startDate}&end_date=${endDate}`)
+                .then(res => res.json())
+                .then(data => {
+                    console.log("Sensor Data Suhu:", data);
+                    // Convert object to array if needed
+                    if (data && typeof data === 'object' && !Array.isArray(data)) {
+                        data = Object.entries(data).map(([key, value]) => ({
+                            tanggal: key,
+                            nilai: value,
+                        }));
+                    }
+                    setSensorData(data);
+                })
+                .catch(error => console.error("Fetch error:", error));
         }
-    };
-
-    return (
-        <div className="chart-container">
-            <h2>Grafik Kelembaban Kandang</h2>
-            <ReactApexChart
-                options={options}
-                series={series}
-                type="line"
-                height={200}
-            />
-        </div>
-    );
-};
-
-const EnvironmentComparisonChartNH3 = ({ chartId }: any) => {
-    const chartColors = useChartColors(chartId);
-    const [datasensor, setSensorData] = useState<any[] | null>(null);
-
-    useEffect(() => {
-        fetch('https://ta-ayam-be.vercel.app/api/sensor/NH3')
-            .then(res => res.json())
-            .then(data => {
-                console.log("Sensor Data NH3:", data);
-                setSensorData(data);
-            })
-            .catch(error => console.error("Fetch error:", error));
-    }, []);
+    }, [selectedDateRange]);
 
     if (!datasensor) {
         return <p>Loading data suhu...</p>;
@@ -169,7 +128,7 @@ const EnvironmentComparisonChartNH3 = ({ chartId }: any) => {
 
     const series = [
         {
-            name: "NH3",
+            name: "Suhu Kandang",
             data: formattedData.map((item) => item.value),
         },
     ];
@@ -194,7 +153,7 @@ const EnvironmentComparisonChartNH3 = ({ chartId }: any) => {
 
     return (
         <div className="chart-container">
-            <h2>Grafik NH3</h2>
+            <h2>Grafik Suhu Kandang</h2>
             <ReactApexChart
                 options={options}
                 series={series}
@@ -205,20 +164,30 @@ const EnvironmentComparisonChartNH3 = ({ chartId }: any) => {
     );
 };
 
-
-const EnvironmentComparisonChartCO2 = ({ chartId }: any) => {
+const EnvironmentComparisonChartCO2 = ({ chartId, selectedDateRange }: any) => {
     const chartColors = useChartColors(chartId);
     const [datasensor, setSensorData] = useState<any[] | null>(null);
 
     useEffect(() => {
-        fetch('https://ta-ayam-be.vercel.app/api/sensor/CO2')
-            .then(res => res.json())
-            .then(data => {
-                console.log("Sensor Data CO2:", data);
-                setSensorData(data);
-            })
-            .catch(error => console.error("Fetch error:", error));
-    }, []);
+        if (selectedDateRange) {
+            const startDate = selectedDateRange[0].toLocaleDateString();
+            const endDate = selectedDateRange[1].toLocaleDateString();
+            fetch(`http://127.0.0.1:5000/api/sensor/CO2?start_date=${startDate}&end_date=${endDate}`)
+                .then(res => res.json())
+                .then(data => {
+                    console.log("Sensor Data Suhu:", data);
+                    // Convert object to array if needed
+                    if (data && typeof data === 'object' && !Array.isArray(data)) {
+                        data = Object.entries(data).map(([key, value]) => ({
+                            tanggal: key,
+                            nilai: value,
+                        }));
+                    }
+                    setSensorData(data);
+                })
+                .catch(error => console.error("Fetch error:", error));
+        }
+    }, [selectedDateRange]);
 
     if (!datasensor) {
         return <p>Loading data suhu...</p>;
@@ -235,7 +204,7 @@ const EnvironmentComparisonChartCO2 = ({ chartId }: any) => {
 
     const series = [
         {
-            name: "CO2",
+            name: "Suhu Kandang",
             data: formattedData.map((item) => item.value),
         },
     ];
@@ -260,7 +229,7 @@ const EnvironmentComparisonChartCO2 = ({ chartId }: any) => {
 
     return (
         <div className="chart-container">
-            <h2>Grafik CO2</h2>
+            <h2>Grafik Suhu Kandang</h2>
             <ReactApexChart
                 options={options}
                 series={series}
@@ -271,19 +240,31 @@ const EnvironmentComparisonChartCO2 = ({ chartId }: any) => {
     );
 };
 
-const EnvironmentComparisonChartDebu = ({ chartId }: any) => {
+
+const EnvironmentComparisonChartNH3 = ({ chartId, selectedDateRange }: any) => {
     const chartColors = useChartColors(chartId);
     const [datasensor, setSensorData] = useState<any[] | null>(null);
 
     useEffect(() => {
-        fetch('https://ta-ayam-be.vercel.app/api/sensor/debu')
-            .then(res => res.json())
-            .then(data => {
-                console.log("Sensor Data Debu:", data);
-                setSensorData(data);
-            })
-            .catch(error => console.error("Fetch error:", error));
-    }, []);
+        if (selectedDateRange) {
+            const startDate = selectedDateRange[0].toLocaleDateString();
+            const endDate = selectedDateRange[1].toLocaleDateString();
+            fetch(`http://127.0.0.1:5000/api/sensor/NH3?start_date=${startDate}&end_date=${endDate}`)
+                .then(res => res.json())
+                .then(data => {
+                    console.log("Sensor Data Suhu:", data);
+                    // Convert object to array if needed
+                    if (data && typeof data === 'object' && !Array.isArray(data)) {
+                        data = Object.entries(data).map(([key, value]) => ({
+                            tanggal: key,
+                            nilai: value,
+                        }));
+                    }
+                    setSensorData(data);
+                })
+                .catch(error => console.error("Fetch error:", error));
+        }
+    }, [selectedDateRange]);
 
     if (!datasensor) {
         return <p>Loading data suhu...</p>;
@@ -300,7 +281,7 @@ const EnvironmentComparisonChartDebu = ({ chartId }: any) => {
 
     const series = [
         {
-            name: "Debu",
+            name: "Suhu Kandang",
             data: formattedData.map((item) => item.value),
         },
     ];
@@ -325,7 +306,7 @@ const EnvironmentComparisonChartDebu = ({ chartId }: any) => {
 
     return (
         <div className="chart-container">
-            <h2>Grafik Debu</h2>
+            <h2>Grafik Suhu Kandang</h2>
             <ReactApexChart
                 options={options}
                 series={series}
@@ -336,6 +317,81 @@ const EnvironmentComparisonChartDebu = ({ chartId }: any) => {
     );
 };
 
+const EnvironmentComparisonChartDebu = ({ chartId, selectedDateRange }: any) => {
+    const chartColors = useChartColors(chartId);
+    const [datasensor, setSensorData] = useState<any[] | null>(null);
+
+    useEffect(() => {
+        if (selectedDateRange) {
+            const startDate = selectedDateRange[0].toLocaleDateString();
+            const endDate = selectedDateRange[1].toLocaleDateString();
+            fetch(`http://127.0.0.1:5000/api/sensor/debu?start_date=${startDate}&end_date=${endDate}`)
+                .then(res => res.json())
+                .then(data => {
+                    console.log("Sensor Data Suhu:", data);
+                    // Convert object to array if needed
+                    if (data && typeof data === 'object' && !Array.isArray(data)) {
+                        data = Object.entries(data).map(([key, value]) => ({
+                            tanggal: key,
+                            nilai: value,
+                        }));
+                    }
+                    setSensorData(data);
+                })
+                .catch(error => console.error("Fetch error:", error));
+        }
+    }, [selectedDateRange]);
+
+    if (!datasensor) {
+        return <p>Loading data suhu...</p>;
+    }
+
+    const formattedData = datasensor.map((item) => ({
+        label: dayjs(item.tanggal.substring(0, 8), "YYYYMMDD").format("DD MMM YY"),
+        value: item.nilai,
+    }));
+
+    const uniqueLabels = formattedData.map((item, index, self) =>
+        index > 0 && item.label === self[index - 1].label ? "" : item.label
+    );
+
+    const series = [
+        {
+            name: "Suhu Kandang",
+            data: formattedData.map((item) => item.value),
+        },
+    ];
+
+    const options: any = {
+        chart: {
+            height: 350,
+            type: "line",
+            zoom: { enabled: false },
+            toolbar: { show: false },
+        },
+        stroke: {
+            curve: "smooth",
+            width: 2,
+        },
+        dataLabels: { enabled: false },
+        colors: chartColors,
+        xaxis: {
+            categories: uniqueLabels,
+        }
+    };
+
+    return (
+        <div className="chart-container">
+            <h2>Grafik Suhu Kandang</h2>
+            <ReactApexChart
+                options={options}
+                series={series}
+                type="line"
+                height={200}
+            />
+        </div>
+    );
+};
 
 
 

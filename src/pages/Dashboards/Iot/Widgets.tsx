@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Scale, LampCeiling, Regex, Vegan, Webhook, Atom, Coins, ListFilter, Thermometer, Droplets } from 'lucide-react';
-import CountUp from 'react-countup';
-import { Dropdown } from 'Common/Components/Dropdown';
-import { PerspectiveChart } from './Charts';
-import { Link } from 'react-router-dom';
-import ThreeDLoader from "./ThreeLoader";
-import GIF from "../../../assets/images/building.gif";
-import useFirebasedata from "../../../hooks/firebase";
+import { LampCeiling, Regex,  Webhook, Atom,  ListFilter, Thermometer, Droplets } from 'lucide-react';
+
 
 // Define types for each sensor
 interface Sensor {

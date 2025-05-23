@@ -1,19 +1,8 @@
 import React, { useEffect } from 'react';
 import BreadCrumb from 'Common/BreadCrumb';
-import WelcomeWidget from './WelcomeWidget';
-import OrderStatistics from './OrderStatistics';
-import Widgets from './Widgets';
-import SalesRevenue from './SalesRevenue';
-import TrafficResources from './TrafficResources';
-import ProductsOrders from './ProductsOrders';
-import ScheduledFeed from './ScheduledFeed';
-import UpcomingFeed  from "./UpcomingFeed";
-import CustomerService from './CustomerService';
-import SalesMonth from './SalesMonth';
-import TopSellingProducts from './TopSellingProducts';
-import Audience from './Audience';
+import Actuator from './Actuator';
 import { useNavigate } from 'react-router-dom';
-
+import Dashboard from './filter';
 const Ecommerce = () => {
 
     const navigate = useNavigate();
@@ -24,7 +13,9 @@ const Ecommerce = () => {
             <BreadCrumb title='All Automatic' pageTitle='Automatic' />
             <div className="grid grid-cols-12 2xl:grid-cols-12 gap-x-2">
                 {/*<WelcomeWidget />*/}
-                <SalesRevenue />
+                
+                <Actuator />
+                {/* <Dashboard /> */}
                 {/* <Widgets /> */}
 
                 {/* <ScheduledFeed/>
