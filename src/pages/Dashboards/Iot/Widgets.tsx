@@ -29,7 +29,7 @@ interface SensorCardProps {
 
 const SensorCard: React.FC<SensorCardProps> = ({ title, icon, data, unit, color, iconColor }) => {
   return (
-    <div className={`order-2 md:col-span-6 lg:col-span-3 col-span-12 2xl:order-1 bg-${color}-100 dark:bg-${color}-500/20 card 2xl:col-span-2 group-data-[skin=bordered]:border-${color}-500/20 relative overflow-hidden`}>
+    <div className={`order-2 md:col-span-6 lg:col-span-2 col-span-12 2xl:order-1 bg-${color}-100 dark:bg-${color}-500/20 card 2xl:col-span-2 group-data-[skin=bordered]:border-${color}-500/20 relative overflow-hidden`}>
       <div className="card-body">
         <ListFilter
           className={`absolute top-0 size-32 stroke-1 text-${color}-200/50 dark:text-${color}-500/20 ltr:-right-10 rtl:-left-10`}

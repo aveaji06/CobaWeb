@@ -44,16 +44,41 @@ const menuData: any = [
 
     },
     {
-        id: "perfect environment",
+        id: "data forensik",
         label: 'Data Forensik',
-        link: "/dashboards-environment",
+        link: "/dashboards-forensik",
         icon: <ThermometerSun />,
 
     },
     {
-        id: "green savior",
-        label: 'Green Savior',
-        link: "/dashboards-green",
+        id: "analytics",
+        label: 'Analytics',
+        link: "/dashboards-analytics",
+        icon: <Sprout/>,
+
+    },
+
+    {
+        id: "example",
+        label: 'Example',
+        link: "/dashboards-example",
+        icon: <Sprout/>,
+
+    },
+
+    {
+        id: "example1",
+        label: 'Example 1',
+        link: "/dashboards-example1",
+        icon: <Sprout/>,
+
+    },
+
+
+        {
+        id: "example2",
+        label: 'Example 2',
+        link: "/dashboards-example2",
         icon: <Sprout/>,
 
     },

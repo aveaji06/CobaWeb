@@ -1,8 +1,11 @@
 // dashboard
 import Iot from "pages/Dashboards/Iot";
-import Ecommerce from "pages/Dashboards/Ecommerce";
-import Email from "pages/Dashboards/Historical";
-import HRDashboard from "pages/Dashboards/HR";
+import Actuators from "pages/Dashboards/Actuators";
+import Forensik from "pages/Dashboards/Forensik";
+import Analytics from "pages/Dashboards/Analytics";
+import Example from "pages/Dashboards/Example";
+import Example1 from "pages/Dashboards/Example1";
+import Example2 from "pages/Dashboards/Example2";
 // Chat
 import Chat from "pages/Chat";
 // Email
@@ -31,6 +34,7 @@ import Register from "pages/Authentication/Register";
 import UserProfile from "pages/Authentication/UserProfile";
 import Account from "pages/Pages/Account";
 import Settings from "pages/Pages/Settings";
+import Dashboard from "@/pages/Dashboards/Iot/Dashboard";
 
 interface RouteObject {
   path: string;
@@ -40,13 +44,14 @@ interface RouteObject {
 
 const authProtectedRoutes: Array<RouteObject> = [
   // Dashboard
-  { path: "/", component: Ecommerce },
-  { path: "/dashboards-automatic", component: Ecommerce },
+  { path: "/", component: Iot },
+  { path: "/dashboards-automatic", component: Actuators },
   { path: "/dashboard", component: Iot },
-  { path: "/dashboards-environment", component: Email },
-  { path: "/dashboards-green", component: HRDashboard },
-
-
+  { path: "/dashboards-forensik", component: Forensik },
+  { path: "/dashboards-analytics", component: Analytics },
+  { path: "/dashboards-example", component: Example },
+  { path: "/dashboards-example1", component: Example1 },
+  { path: "/dashboards-example2", component: Example2 },
 
   // plugins
   { path: "/plugins-video-player", component: VideoPlayer },
