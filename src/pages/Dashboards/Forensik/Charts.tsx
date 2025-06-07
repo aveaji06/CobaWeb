@@ -18,7 +18,7 @@ const EnvironmentComparisonChartSuhu = ({ chartId, selectedDateRange }: any) => 
         if (selectedDateRange) {
             const startDate = selectedDateRange[0].toLocaleDateString();
             const endDate = selectedDateRange[1].toLocaleDateString();
-            fetch(`https://ta-ayam-be.vercel.app/api/forensic/suhu?start_date=${startDate}&end_date=${endDate}`)
+            fetch(`http://127.0.0.1:5000/api/forensic/suhu?start_date=${startDate}&end_date=${endDate}`)
                 .then(res => res.json())
                 .then(data => {
                     console.log("Sensor Data Suhu:", data);
@@ -96,7 +96,7 @@ const EnvironmentComparisonChartKelembaban = ({ chartId, selectedDateRange }: an
         if (selectedDateRange) {
             const startDate = selectedDateRange[0].toLocaleDateString();
             const endDate = selectedDateRange[1].toLocaleDateString();
-            fetch(`https://ta-ayam-be.vercel.app/api/forensic/kelembaban?start_date=${startDate}&end_date=${endDate}`)
+            fetch(`http://127.0.0.1:5000/api/forensic/kelembaban?start_date=${startDate}&end_date=${endDate}`)
                 .then(res => res.json())
                 .then(data => {
                     console.log("Sensor Data Suhu:", data);
@@ -172,7 +172,7 @@ const EnvironmentComparisonChartCO2 = ({ chartId, selectedDateRange }: any) => {
         if (selectedDateRange) {
             const startDate = selectedDateRange[0].toLocaleDateString();
             const endDate = selectedDateRange[1].toLocaleDateString();
-            fetch(`https://ta-ayam-be.vercel.app/api/forensic/CO2?start_date=${startDate}&end_date=${endDate}`)
+            fetch(`http://127.0.0.1:5000/api/forensic/CO2?start_date=${startDate}&end_date=${endDate}`)
                 .then(res => res.json())
                 .then(data => {
                     console.log("Sensor Data Suhu:", data);
@@ -249,7 +249,7 @@ const EnvironmentComparisonChartNH3 = ({ chartId, selectedDateRange }: any) => {
         if (selectedDateRange) {
             const startDate = selectedDateRange[0].toLocaleDateString();
             const endDate = selectedDateRange[1].toLocaleDateString();
-            fetch(`https://ta-ayam-be.vercel.app/api/forensic/NH3?start_date=${startDate}&end_date=${endDate}`)
+            fetch(`http://127.0.0.1:5000/api/forensic/NH3?start_date=${startDate}&end_date=${endDate}`)
                 .then(res => res.json())
                 .then(data => {
                     console.log("Sensor Data Suhu:", data);
@@ -325,7 +325,7 @@ const EnvironmentComparisonChartDebu = ({ chartId, selectedDateRange }: any) => 
         if (selectedDateRange) {
             const startDate = selectedDateRange[0].toLocaleDateString();
             const endDate = selectedDateRange[1].toLocaleDateString();
-            fetch(`https://ta-ayam-be.vercel.app/api/sensor/debu?start_date=${startDate}&end_date=${endDate}`)
+            fetch(`http://127.0.0.1:5000/api/sensor/debu?start_date=${startDate}&end_date=${endDate}`)
                 .then(res => res.json())
                 .then(data => {
                     console.log("Sensor Data Suhu:", data);

@@ -15,7 +15,7 @@ const MortalitasChart: React.FC = () => {
 
   useEffect(() => {
     // Fetch the data from the backend
-    fetch('https://ta-ayam-be.vercel.app/day/get_mortalitas')
+    fetch('http://localhost:5000/day/get_mortalitas')
       .then((response) => response.json())
       .then((data) => {
         setMortalitasData(data);

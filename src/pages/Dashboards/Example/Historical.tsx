@@ -21,14 +21,14 @@ const sensorEndpoints: Record<string, string> = {
   // NH3: "https://ta-ayam-be.vercel.app/api/sensor/NH3",
   // debu: "https://ta-ayam-be.vercel.app/api/sensor/debu",
   // cahaya: "https://ta-ayam-be.vercel.app/api/sensor/cahaya"
-  suhu: "https://ta-ayam-be.vercel.app/api/sensor/Temperature",
-  kelembaban: "https://ta-ayam-be.vercel.app/api/sensor/Humidity",
-  CO2: "https://ta-ayam-be.vercel.app/api/sensor/CO2",
-  NH3: "https://ta-ayam-be.vercel.app/api/sensor/NH3",
-  RTD_Temp: "https://ta-ayam-be.vercel.app/api/sensor/RTD_Temp",
-  debu: "https://ta-ayam-be.vercel.app/api/sensor/PM10",
-  PM2_5: "https://ta-ayam-be.vercel.app/api/sensor/PM2_5",
-  cahaya: "https://ta-ayam-be.vercel.app/api/sensor/Light"
+  suhu: "http://127.0.0.1:5000/api/sensor/Temperature",
+  kelembaban: "http://127.0.0.1:5000/api/sensor/Humidity",
+  CO2: "http://127.0.0.1:5000/api/sensor/CO2",
+  NH3: "http://127.0.0.1:5000/api/sensor/NH3",
+  RTD_Temp: "http://127.0.0.1:5000/api/sensor/RTD_Temp",
+  debu: "http://127.0.0.1:5000/api/sensor/PM10",
+  PM2_5: "http://127.0.0.1:5000/api/sensor/PM2_5",
+  cahaya: "http://127.0.0.1:5000/api/sensor/Light"
 };
 
 const Historis: React.FC = () => {
