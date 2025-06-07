@@ -18,7 +18,7 @@ const EnvironmentComparisonChartSuhu = ({ chartId, selectedDateRange }: any) => 
         if (selectedDateRange) {
             const startDate = selectedDateRange[0].toLocaleDateString();
             const endDate = selectedDateRange[1].toLocaleDateString();
-            fetch(`https://ta-ayam-be.vercel.app/api/forensic/suhu?start_date=${startDate}&end_date=${endDate}`)
+            fetch(`https://ta-ayam-be.vercel.app/api/forensic/Temperature?start_date=${startDate}&end_date=${endDate}`)
                 .then(res => res.json())
                 .then(data => {
                     console.log("Sensor Data Suhu:", data);
@@ -96,7 +96,7 @@ const EnvironmentComparisonChartKelembaban = ({ chartId, selectedDateRange }: an
         if (selectedDateRange) {
             const startDate = selectedDateRange[0].toLocaleDateString();
             const endDate = selectedDateRange[1].toLocaleDateString();
-            fetch(`https://ta-ayam-be.vercel.app/api/forensic/kelembaban?start_date=${startDate}&end_date=${endDate}`)
+            fetch(`https://ta-ayam-be.vercel.app/api/forensic/Humidity?start_date=${startDate}&end_date=${endDate}`)
                 .then(res => res.json())
                 .then(data => {
                     console.log("Sensor Data Suhu:", data);
@@ -325,7 +325,7 @@ const EnvironmentComparisonChartDebu = ({ chartId, selectedDateRange }: any) => 
         if (selectedDateRange) {
             const startDate = selectedDateRange[0].toLocaleDateString();
             const endDate = selectedDateRange[1].toLocaleDateString();
-            fetch(`https://ta-ayam-be.vercel.app/api/sensor/debu?start_date=${startDate}&end_date=${endDate}`)
+            fetch(`https://ta-ayam-be.vercel.app/api/sensor/PM10?start_date=${startDate}&end_date=${endDate}`)
                 .then(res => res.json())
                 .then(data => {
                     console.log("Sensor Data Suhu:", data);
@@ -382,7 +382,7 @@ const EnvironmentComparisonChartDebu = ({ chartId, selectedDateRange }: any) => 
 
     return (
         <div className="chart-container">
-            <h2>Grafik Debu Kandang</h2>
+            <h2>Grafik Debu PM10</h2>
             <ReactApexChart
                 options={options}
                 series={series}
