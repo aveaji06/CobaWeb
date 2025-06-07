@@ -14,15 +14,15 @@ const Ayam: React.FC = () => {
     // Fetch current day, jumlah ayam, and jumlah ayam mati from the backend
     const fetchData = async () => {
       try {
-        const dayResponse = await fetch('http://localhost:5000/day/get_day');
+        const dayResponse = await fetch('https://ta-ayam-be.vercel.app/day/get_day');
         const dayData = await dayResponse.json();
         setDay(dayData.day);
 
-        const jumlahAyamResponse = await fetch('http://localhost:5000/day/get_jml_ayam');
+        const jumlahAyamResponse = await fetch('https://ta-ayam-be.vercel.app/day/get_jml_ayam');
         const jumlahAyamData = await jumlahAyamResponse.json();
         setJumlahAyam(jumlahAyamData.jml_ayam);
 
-        const jumlahAyamMatiResponse = await fetch('http://localhost:5000/day/get_ayam_mati');
+        const jumlahAyamMatiResponse = await fetch('https://ta-ayam-be.vercel.app/day/get_ayam_mati');
         const jumlahAyamMatiData = await jumlahAyamMatiResponse.json();
         setJumlahAyamMati(jumlahAyamMatiData.ayam_mati);
       } catch (error) {
@@ -47,7 +47,7 @@ const Ayam: React.FC = () => {
   // Handle changing the day in backend
   const handleChangeDay = async () => {
     try {
-      const response = await fetch('http://localhost:5000/day/set_day', {
+      const response = await fetch('https://ta-ayam-be.vercel.app/day/set_day', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ day: newDay }),
@@ -68,7 +68,7 @@ const Ayam: React.FC = () => {
   // Handle resetting the day to 1
   const handleResetDay = async () => {
     try {
-      const response = await fetch('http://localhost:5000/day/reset_day', {
+      const response = await fetch('https://ta-ayam-be.vercel.app/day/reset_day', {
         method: 'POST',
       });
 
@@ -86,7 +86,7 @@ const Ayam: React.FC = () => {
   const handleChangeDayIncrement = async () => {
     try {
       // Fetch the current day first
-      const dayResponse = await fetch('http://localhost:5000/day/get_day');
+      const dayResponse = await fetch('https://ta-ayam-be.vercel.app/day/get_day');
       const dayData = await dayResponse.json();
 
       // Ensure we got a valid day
@@ -94,7 +94,7 @@ const Ayam: React.FC = () => {
         const newDay = dayData.day + 1; // Increment the day by 1
 
         // Send the updated day to the backend
-        const response = await fetch('http://localhost:5000/day/set_day', {
+        const response = await fetch('https://ta-ayam-be.vercel.app/day/set_day', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ day: newDay }),
@@ -125,7 +125,7 @@ const Ayam: React.FC = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/day/set_jml_ayam', {
+      const response = await fetch('https://ta-ayam-be.vercel.app/day/set_jml_ayam', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ jml_ayam: jumlahAyamNumber }),
@@ -155,7 +155,7 @@ const Ayam: React.FC = () => {
 
     try {
       // Update jumlah ayam mati on the backend
-      const response = await fetch('http://localhost:5000/day/set_ayam_mati', {
+      const response = await fetch('https://ta-ayam-be.vercel.app/day/set_ayam_mati', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ayam_mati: jumlahAyamMatiNumber }),
@@ -167,7 +167,7 @@ const Ayam: React.FC = () => {
         setShowInputJumlahAyamMati(false);
 
         // Fetch the updated jumlah ayam mati from the backend
-        const ayamMatiResponse = await fetch('http://localhost:5000/day/get_ayam_mati');
+        const ayamMatiResponse = await fetch('https://ta-ayam-be.vercel.app/day/get_ayam_mati');
         const ayamMatiData = await ayamMatiResponse.json();
         setJumlahAyamMati(ayamMatiData.ayam_mati); // Update the state with the latest data
       } else {
