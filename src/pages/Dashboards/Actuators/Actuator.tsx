@@ -6,22 +6,22 @@ import GIF from "../../../assets/images/feeder.gif";
 import { database } from "config/config";
 import { ref, set, onValue } from 'firebase/database'; // Menggunakan onValue untuk Firebase
 import Tab from 'Common/Components/Tab/Tab';
+
+
+
 const Actuator = () => {
     // Deklarasi state
     const [fanStatus, setFanStatus] = useState(false); 
-    const [fanDirection, setFanDirection] = useState("Left");
     const [fanSpeed, setFanSpeed] = useState(0); 
     const [isConfirmed, setIsConfirmed] = useState(false);
     
     const [fanStatus2, setFanStatus2] = useState(false); 
-    const [fanDirection2, setFanDirection2] = useState("Left");
     const [fanSpeed2, setFanSpeed2] = useState(0); 
     const [isConfirmed2, setIsConfirmed2] = useState(false);
 
 
 
     const [heaterStatus, setHeaterStatus] = useState(false); // Correct state declaration for heaterStatus
-    const [heaterLevel, setHeaterLevel] = useState(0); // Correct state declaration for heaterLevel
     const [isConfirmed3, setIsConfirmed3] = useState(false);
 
     const [value, setValue] = useState(50);
@@ -133,153 +133,180 @@ const formatTime = (dateString: string) => {
     };
 
     
-    // Ambil data dari Firebase ketika komponen dimuat
+     // Ambil data dari Firebase ketika komponen dimuat
     useEffect(() => {
-        const fanRef = ref(database, 'act-state/fan'); // Path data kipas
+        const fanRef = ref(database, 'actuators-current/Inline'); // Path data kipas
         onValue(fanRef, snapshot => {  // Menggunakan onValue untuk mendengarkan data
             const fanData = snapshot.val(); // Mengambil data dari Firebase
             if (fanData) {
-                setFanStatus(fanData.status === 'ON');
-                setFanDirection(fanData.direction);
-                setFanSpeed(fanData.speed);
+                setFanStatus(fanData !== 0);
+                setFanSpeed(fanData);
             }
         });
     }, []);
 
-    // Fungsi untuk mengirim data ke Firebase setelah konfirmasi
-    const sendDataToFirebase = () => {
-        const fanData = {
-            state: fanStatus ? "on" : "off",
-            speed: fanSpeed,
+    // Fungsi untuk mengirim data ke localhost:5000 (bukan Firebase)
+    const sendDataToLocalhost = () => {
+        const payload = {
+            device: "Inline",
+            settings: {
+                speed: fanSpeed
+            }
         };
-        set(ref(database, "actuators/inline"), fanData); // Mengirim data ke Firebase
+
+        // Mengirim data menggunakan fetch ke localhost
+        fetch("https://ta-ayam-be.vercel.app/manual_control", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload) // Mengirim data dalam format JSON
+        })
+        .then(response => response.json()) // Mengambil respons sebagai JSON
+        .then(data => {
+            console.log("Data sent to localhost:", data);
+        })
+        .catch(error => {
+            console.error("Error sending data to localhost:", error);
+        });
     };
 
     // Fungsi untuk menangani perubahan status kipas
     const toggleFanStatus = () => {
-        // Jika status kipas berubah ke OFF, set speed ke 0
-        setFanStatus(!fanStatus);
+        setFanStatus(!fanStatus); // Toggle the fan status
         if (fanStatus) {
-            setFanSpeed(0); // Set kecepatan kipas menjadi 0 jika kipas dimatikan
+            setFanSpeed(0); // Set fan speed to 0 if turned off
+        } else {
+            setFanSpeed(50); // Set fan speed to 50 if turned on
         }
-        if (!fanStatus) {
-            setFanSpeed(50); // Set kecepatan kipas menjadi 0 jika kipas dimatikan
-        }
-    };
-
-    // Fungsi untuk menangani perubahan arah kipas
-    const changeFanDirection = (direction: string) => { // Mendefinisikan tipe parameter direction
-        setFanDirection(direction);
     };
 
     // Fungsi untuk menangani perubahan kecepatan kipas
-    const changeFanSpeed = (event: React.ChangeEvent<HTMLInputElement>) => { // Mendefinisikan tipe parameter event
+    const changeFanSpeed = (event: React.ChangeEvent<HTMLInputElement>) => {
         setFanSpeed(Number(event.target.value)); // Mengubah kecepatan kipas
     };
 
-    // Fungsi untuk mengonfirmasi perubahan dan mengirimkan data ke Firebase
+    // Fungsi untuk mengonfirmasi perubahan dan mengirimkan data ke localhost
     const handleConfirm = () => {
-        setIsConfirmed(true); 
-        sendDataToFirebase(); // Kirim data setelah konfirmasi
+        sendDataToLocalhost(); // Kirim data ke localhost setelah konfirmasi
     };
 
 
 // Ambil data dari Firebase ketika komponen dimuat
     useEffect(() => {
-        const fanRef = ref(database, 'coba/fan2'); // Path data kipas
+        const fanRef = ref(database, 'actuators-current/Exhaust'); // Path data kipas
         onValue(fanRef, snapshot => {  // Menggunakan onValue untuk mendengarkan data
             const fanData2 = snapshot.val(); // Mengambil data dari Firebase
             if (fanData2) {
-                setFanStatus2(fanData2.status2 === 'ON');
-                setFanDirection2(fanData2.direction2);
-                setFanSpeed2(fanData2.speed2);
+                setFanStatus2(fanData2 !== 0);
+                setFanSpeed2(fanData2);
             }
         });
     }, []);
 
+
+   // Fungsi untuk mengirim data ke localhost:5000 (bukan Firebase)
+    const sendDataToLocalhost2 = () => {
+        const payload = {
+            device: "Exhaust",
+            settings: {
+                speed: fanSpeed2
+            }
+        };
+
+        // Mengirim data menggunakan fetch ke localhost
+        fetch("https://ta-ayam-be.vercel.app/manual_control", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload) // Mengirim data dalam format JSON
+        })
+        .then(response => response.json()) // Mengambil respons sebagai JSON
+        .then(data => {
+            console.log("Data sent to localhost:", data);
+        })
+        .catch(error => {
+            console.error("Error sending data to localhost:", error);
+        });
+    };
 
     // Fungsi untuk menangani perubahan status kipas
     const toggleFanStatus2 = () => {
-        // Jika status kipas berubah ke OFF, set speed ke 0
-        setFanStatus2(!fanStatus2);
+        setFanStatus2(!fanStatus2); // Toggle the fan status
         if (fanStatus2) {
-            setFanSpeed2(0); // Set kecepatan kipas menjadi 0 jika kipas dimatikan
+            setFanSpeed2(0); // Set fan speed to 0 if turned off
+        } else {
+            setFanSpeed2(50); // Set fan speed to 50 if turned on
         }
-        if (!fanStatus2) {
-            setFanSpeed2(50); // Set kecepatan kipas menjadi 0 jika kipas dimatikan
-        }
-    };
-
-    // Fungsi untuk mengirim data ke Firebase setelah konfirmasi
-    const sendDataToFirebase2 = () => {
-        const fanData2 = {
-            state: fanStatus2 ? "on" : "off",
-            speed: fanSpeed2,
-        };
-        set(ref(database, "actuators/exhaust"), fanData2); // Mengirim data ke Firebase
-    };
-
-    // Fungsi untuk menangani perubahan arah kipas
-    const changeFanDirection2 = (direction2: string) => { // Mendefinisikan tipe parameter direction
-        setFanDirection2(direction2);
     };
 
     // Fungsi untuk menangani perubahan kecepatan kipas
-    const changeFanSpeed2 = (event: React.ChangeEvent<HTMLInputElement>) => { // Mendefinisikan tipe parameter event
+    const changeFanSpeed2 = (event: React.ChangeEvent<HTMLInputElement>) => {
         setFanSpeed2(Number(event.target.value)); // Mengubah kecepatan kipas
     };
 
-    // Fungsi untuk mengonfirmasi perubahan dan mengirimkan data ke Firebase
+    // Fungsi untuk mengonfirmasi perubahan dan mengirimkan data ke localhost
     const handleConfirm2 = () => {
-        setIsConfirmed2(true); 
-        sendDataToFirebase2(); // Kirim data setelah konfirmasi
+        sendDataToLocalhost2(); // Kirim data ke localhost setelah konfirmasi
     };
 
-    // Fetch data from Firebase when the component is mounted
+
+
+
+
+
+
+// Ambil data dari Firebase ketika komponen dimuat
     useEffect(() => {
-        const heaterRef = ref(database, 'coba/heater'); // Path to heater data
-        onValue(heaterRef, snapshot => { // Using onValue to listen for data
-            const heaterData = snapshot.val(); // Get the data from Firebase
+        const heaterRef = ref(database, 'actuators-current/Heater'); // Path to heater data
+        onValue(heaterRef, snapshot => { // Menggunakan onValue untuk mendengarkan data
+            const heaterData = snapshot.val(); // Mengambil data dari Firebase
             if (heaterData) {
-                setHeaterStatus(heaterData.status === 'ON');
-                setHeaterLevel(heaterData.level);
+                setHeaterStatus(heaterData !== 0); // Set status heater berdasarkan data dari Firebase
             }
         });
     }, []);
 
-    // Function to send data to Firebase after confirmation
-    const sendDataToFirebase3 = () => {
-        const heaterData = {
-            state: heaterStatus ? "on" : "off",
-            level: heaterLevel,
+    // Fungsi untuk mengirim data ke localhost:5000 (bukan Firebase)
+    const sendDataToLocalhost3 = () => {
+        const payload = {
+            device: "Heater", // Menyebutkan device yang dikontrol
+            settings: {
+                state: heaterStatus ? "1" : "0"  // Mengirimkan 1 untuk "on" dan 0 untuk "off"
+            }
         };
-        set(ref(database, "actuators/heater"), heaterData); // Send data to Firebase
+
+        // Mengirim data menggunakan fetch ke localhost
+        fetch("https://ta-ayam-be.vercel.app/manual_control", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload) // Mengirim data dalam format JSON
+        })
+        .then(response => response.json()) // Mengambil respons sebagai JSON
+        .then(data => {
+            console.log("Data sent to localhost:", data); // Mengkonfirmasi data yang dikirim
+        })
+        .catch(error => {
+            console.error("Error sending data to localhost:", error); // Menangani error jika gagal
+        });
     };
 
-    // Function to handle status toggle of the heater
+
+
+    // Fungsi untuk menangani perubahan status heater (toggle heater status)
     const toggleHeaterStatus = () => {
-        setHeaterStatus(!heaterStatus);
-        if (!heaterStatus) {
-            setHeaterLevel(100); // Set heater level to 50 when turned on
-        } else {
-            setHeaterLevel(0); // Set heater level to 0 when turned off
-        }
+        const newStatus = !heaterStatus;  // Toggle the heater status
+        setHeaterStatus(newStatus);  // Update the status
     };
 
-    // Function to handle change in heater level
-    const changeHeaterLevel = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setHeaterLevel(Number(event.target.value)); // Update the heater level
-    };
-
-    // Function to confirm the changes and send data to Firebase
+    // Fungsi untuk mengonfirmasi perubahan dan mengirimkan data ke localhost
     const handleConfirm3 = () => {
         setIsConfirmed3(true); 
-        sendDataToFirebase3(); // Send data to Firebase after confirmation
+        sendDataToLocalhost3(); // Kirim data ke localhost setelah konfirmasi
     };
-
-
-
-
 
 
 
