@@ -17,7 +17,8 @@ import { editProfile } from "slices/thunk";
 const UserProfile = () => {
 
   //meta title
-  document.title = "Profile | Skote - React ";
+  document.title = "Telematics IoT";
+
 
   const dispatch = useDispatch<any>();
 
@@ -68,7 +69,7 @@ const UserProfile = () => {
     <React.Fragment>
       <div className="container-fluid group-data-[content=boxed]:max-w-boxed mx-auto">
         {/* Render Breadcrumb */}
-        <BreadCrumb title="Bimoo" pageTitle="Profile" />
+        <BreadCrumb title="Telematics IoT" pageTitle="Profile" />
 
         <div className="row">
           <div className="grid grid-cols-1 gap-x-5 xl:grid-cols-1">

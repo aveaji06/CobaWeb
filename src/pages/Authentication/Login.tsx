@@ -17,7 +17,7 @@ import { Link } from "react-router-dom";
 
 const Login = (props: any) => {
 
-    document.title = "Login | Bimoo - React ";
+    document.title = "Login";
 
     const dispatch = useDispatch<any>();
 

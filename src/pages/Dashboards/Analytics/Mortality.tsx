@@ -98,7 +98,7 @@ const MortalitasChart: React.FC = () => {
   }
 
   return (
-    <div className="md:col-span-3 lg:col-span-6 col-span-12 2xl:order-1 card 2xl:col-span-3">
+    <div className="md:col-span-3 lg:col-span-6 col-span-12 card 2xl:col-span-3">
       <div>
         <h2>Mortalitas Chart</h2>
         <ReactApexChart

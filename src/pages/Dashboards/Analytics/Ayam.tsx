@@ -181,7 +181,7 @@ const Ayam: React.FC = () => {
   return (
     <React.Fragment>
       {/* Day */}
-      <div className="md:col-span-3 lg:col-span-3 col-span-12 2xl:order-1 card 2xl:col-span-3">
+      <div className="md:col-span-3 lg:col-span-3 col-span-12 card 2xl:col-span-3">
         <div className="card-body pt-4">
           <h1 className="text-xl font-semibold mb-4">
             Day:
@@ -214,7 +214,7 @@ const Ayam: React.FC = () => {
       </div>
 
       {/* Jumlah Ayam */}
-      <div className="md:col-span-3 lg:col-span-3 col-span-12 2xl:order-1 card 2xl:col-span-3">
+      <div className="md:col-span-3 lg:col-span-3 col-span-12 card 2xl:col-span-3">
         <div className="card-body pt-4">
           <h1 className="text-xl font-semibold mb-4">
             Jumlah Seluruh Ayam:
@@ -244,7 +244,7 @@ const Ayam: React.FC = () => {
       </div>
 
       {/* Jumlah Ayam Mati */}
-      <div className="md:col-span-3 lg:col-span-3 col-span-12 2xl:order-1 card 2xl:col-span-3">
+      <div className="md:col-span-3 lg:col-span-3 col-span-12 card 2xl:col-span-3">
         <div className="card-body pt-4">
           <h1 className="text-xl font-semibold mb-4">
             Jumlah Ayam Mati:

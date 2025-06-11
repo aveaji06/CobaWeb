@@ -17,7 +17,7 @@ import { RootState } from "slices";
 
 const Register = () => {
 
-    document.title = "Register | Bimoo - React ";
+    document.title = "Register";
 
     const dispatch = useDispatch<any>();
     const navigation = useNavigate(); // Use the useNavigate hook
@@ -87,7 +87,7 @@ const Register = () => {
 
                         <div className="mt-8 text-center">
                             <h4 className="mb-1 text-custom-500 dark:text-custom-500">Create your free account</h4>
-                            <p className="text-slate-500 dark:text-zink-200">Get your free Bimoo account now</p>
+                            <p className="text-slate-500 dark:text-zink-200">Get your free Telematics IoT account now</p>
                         </div>
 
                         <form action="/" className="mt-10" id="registerForm"
@@ -141,7 +141,7 @@ const Register = () => {
                                     <div id="password-error" className="mt-1 text-sm text-red-500">{validation.errors.password}</div>
                                 ) : null}
                             </div>
-                            <p className="italic text-15 text-slate-500 dark:text-zink-200">By registering you agree to the Bimoo <a href="#!" className="underline">Terms of Use</a></p>
+                            <p className="italic text-15 text-slate-500 dark:text-zink-200">By registering you agree to the Telematics IoT <a href="#!" className="underline">Terms of Use</a></p>
                             <div className="mt-10">
                                 <button type="submit" className="w-full text-white transition-all duration-200 ease-linear btn bg-custom-500 border-custom-500 hover:text-white hover:bg-custom-600 hover:border-custom-600 focus:text-white focus:bg-custom-600 focus:border-custom-600 focus:ring focus:ring-custom-100 active:text-white active:bg-custom-600 active:border-custom-600 active:ring active:ring-custom-100 dark:ring-custom-400/20">Sign In</button>
                             </div>

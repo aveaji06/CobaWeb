@@ -2,11 +2,11 @@ import React from 'react';
 
 //import images
 // import logoSm from "assets/images/logo-sm.png";
-import logoSm from "assets/images/ITB.png";
+import logoSm from "assets/images/IoT2.png";
 // import logoDark from "assets/images/logo-dark.png";
-import logoDark from "assets/images/ITB.png";
+import logoDark from "assets/images/IoT2.png";
 // import logoLight from "assets/images/logo-light.png";
-import logoLight from "assets/images/ITB.png";
+import logoLight from "assets/images/IoT2.png";
 import { Link } from 'react-router-dom';
 
 import VerticalLayout from "../VerticalLayout/Index";
