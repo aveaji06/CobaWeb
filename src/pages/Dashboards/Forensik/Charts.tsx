@@ -16,13 +16,22 @@ const EnvironmentComparisonChartSuhu = ({ chartId, selectedDateRange }: any) => 
                 .then(res => res.json())
                 .then(data => {
                     console.log("Sensor Data Suhu:", data);
-                    setSensorData(data);
+                    if (Array.isArray(data)) {
+                        setSensorData(data);
+                    } else {
+                        console.error("Data is not an array:", data);
+                        setSensorData([]); // Set empty array if the response is not valid
+                    }
                 })
-                .catch(error => console.error("Fetch error:", error));
+                .catch(error => {
+                    console.error("Fetch error:", error);
+                    setSensorData([]); // Handle error by setting an empty array
+                });
         }
     }, [selectedDateRange]);
 
-    if (!datasensor) {
+    // Check if datasensor is valid (array) before attempting to map over it
+    if (!datasensor || !Array.isArray(datasensor)) {
         return <p>Loading data suhu...</p>;
     }
 
@@ -73,6 +82,8 @@ const EnvironmentComparisonChartSuhu = ({ chartId, selectedDateRange }: any) => 
     );
 };
 
+// Similar updates for other charts: Kelembaban, CO2, NH3, and Debu
+
 // Kelembaban Chart
 const EnvironmentComparisonChartKelembaban = ({ chartId, selectedDateRange }: any) => {
     const chartColors = useChartColors(chartId);
@@ -86,18 +97,26 @@ const EnvironmentComparisonChartKelembaban = ({ chartId, selectedDateRange }: an
                 .then(res => res.json())
                 .then(data => {
                     console.log("Sensor Data Kelembaban:", data);
-                    setSensorData(data);
+                    if (Array.isArray(data)) {
+                        setSensorData(data);
+                    } else {
+                        console.error("Data is not an array:", data);
+                        setSensorData([]);
+                    }
                 })
-                .catch(error => console.error("Fetch error:", error));
+                .catch(error => {
+                    console.error("Fetch error:", error);
+                    setSensorData([]);
+                });
         }
     }, [selectedDateRange]);
 
-    if (!datasensor) {
+    if (!datasensor || !Array.isArray(datasensor)) {
         return <p>Loading data kelembaban...</p>;
     }
 
     const formattedData = datasensor.map((item) => ({
-        label: dayjs(item.tanggal).locale('id').format("D MMMM YY"), // Format: 7 Juni 2025
+        label: dayjs(item.tanggal).locale('id').format("D MMMM YY"),
         value: item.nilai,
     }));
 
@@ -156,18 +175,26 @@ const EnvironmentComparisonChartCO2 = ({ chartId, selectedDateRange }: any) => {
                 .then(res => res.json())
                 .then(data => {
                     console.log("Sensor Data CO2:", data);
-                    setSensorData(data);
+                    if (Array.isArray(data)) {
+                        setSensorData(data);
+                    } else {
+                        console.error("Data is not an array:", data);
+                        setSensorData([]);
+                    }
                 })
-                .catch(error => console.error("Fetch error:", error));
+                .catch(error => {
+                    console.error("Fetch error:", error);
+                    setSensorData([]);
+                });
         }
     }, [selectedDateRange]);
 
-    if (!datasensor) {
+    if (!datasensor || !Array.isArray(datasensor)) {
         return <p>Loading data CO2...</p>;
     }
 
     const formattedData = datasensor.map((item) => ({
-        label: dayjs(item.tanggal).locale('id').format("D MMMM YY"), // Format: 7 Juni 2025
+        label: dayjs(item.tanggal).locale('id').format("D MMMM YY"),
         value: item.nilai,
     }));
 
@@ -226,18 +253,26 @@ const EnvironmentComparisonChartNH3 = ({ chartId, selectedDateRange }: any) => {
                 .then(res => res.json())
                 .then(data => {
                     console.log("Sensor Data NH3:", data);
-                    setSensorData(data);
+                    if (Array.isArray(data)) {
+                        setSensorData(data);
+                    } else {
+                        console.error("Data is not an array:", data);
+                        setSensorData([]);
+                    }
                 })
-                .catch(error => console.error("Fetch error:", error));
+                .catch(error => {
+                    console.error("Fetch error:", error);
+                    setSensorData([]);
+                });
         }
     }, [selectedDateRange]);
 
-    if (!datasensor) {
+    if (!datasensor || !Array.isArray(datasensor)) {
         return <p>Loading data NH3...</p>;
     }
 
     const formattedData = datasensor.map((item) => ({
-        label: dayjs(item.tanggal).locale('id').format("D MMMM YY"), // Format: 7 Juni 2025
+        label: dayjs(item.tanggal).locale('id').format("D MMMM YY"),
         value: item.nilai,
     }));
 
@@ -283,7 +318,7 @@ const EnvironmentComparisonChartNH3 = ({ chartId, selectedDateRange }: any) => {
     );
 };
 
-// NH3 Chart
+// Debu Chart
 const EnvironmentComparisonChartDebu = ({ chartId, selectedDateRange }: any) => {
     const chartColors = useChartColors(chartId);
     const [datasensor, setSensorData] = useState<any[] | null>(null);
@@ -296,18 +331,26 @@ const EnvironmentComparisonChartDebu = ({ chartId, selectedDateRange }: any) => 
                 .then(res => res.json())
                 .then(data => {
                     console.log("Sensor Data PM10:", data);
-                    setSensorData(data);
+                    if (Array.isArray(data)) {
+                        setSensorData(data);
+                    } else {
+                        console.error("Data is not an array:", data);
+                        setSensorData([]);
+                    }
                 })
-                .catch(error => console.error("Fetch error:", error));
+                .catch(error => {
+                    console.error("Fetch error:", error);
+                    setSensorData([]);
+                });
         }
     }, [selectedDateRange]);
 
-    if (!datasensor) {
+    if (!datasensor || !Array.isArray(datasensor)) {
         return <p>Loading data PM10...</p>;
     }
 
     const formattedData = datasensor.map((item) => ({
-        label: dayjs(item.tanggal).locale('id').format("D MMMM YY"), // Format: 7 Juni 2025
+        label: dayjs(item.tanggal).locale('id').format("D MMMM YY"),
         value: item.nilai,
     }));
 
