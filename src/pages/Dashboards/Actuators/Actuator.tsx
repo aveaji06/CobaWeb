@@ -26,10 +26,14 @@ const Actuator = () => {
 
     const [value, setValue] = useState(50);
     const [feedSchedule, setFeedSchedule] = useState<Date | null>(null);
-    const [feedAmount, setFeedAmount] = useState(500);
+    const [feedAmount, setFeedAmount] = useState(360);
     const [isConfirmed1, setIsConfirmed1] = useState(false);
 
     const [upcomingSchedules, setUpcomingSchedules] = useState<any[]>([]); // State for storing upcoming schedules
+
+    const [manualControlStatus, setManualControlStatus] = useState(false); // Default is "off"
+
+
 
     // Function to fetch and filter upcoming schedules from Firebase
     const fetchUpcomingSchedules = () => {
@@ -37,7 +41,6 @@ const Actuator = () => {
         onValue(schedulesRef, snapshot => {
             const schedulesData = snapshot.val();
             if (schedulesData) {
-    
                 const filteredSchedules = Object.keys(schedulesData).filter((key) => {
                     // Convert key to Date object for comparison
                     const scheduleDate = new Date(
@@ -76,7 +79,7 @@ const Actuator = () => {
     // Handle Feed Schedule Change
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setValue(Number(event.target.value));
-        setFeedAmount(Number(event.target.value) * 10); // Calculate feed amount in grams
+        setFeedAmount(Number(event.target.value)); // Calculate feed amount in grams
     };
 
     // Handle Date and Time Selection
@@ -135,7 +138,7 @@ const formatTime = (dateString: string) => {
     
      // Ambil data dari Firebase ketika komponen dimuat
     useEffect(() => {
-        const fanRef = ref(database, 'actuators-current/Inline'); // Path data kipas
+        const fanRef = ref(database, 'actuator-state/Inline'); // Path data kipas
         onValue(fanRef, snapshot => {  // Menggunakan onValue untuk mendengarkan data
             const fanData = snapshot.val(); // Mengambil data dari Firebase
             if (fanData) {
@@ -194,7 +197,7 @@ const formatTime = (dateString: string) => {
 
 // Ambil data dari Firebase ketika komponen dimuat
     useEffect(() => {
-        const fanRef = ref(database, 'actuators-current/Exhaust'); // Path data kipas
+        const fanRef = ref(database, 'actuator-state/Exhaust'); // Path data kipas
         onValue(fanRef, snapshot => {  // Menggunakan onValue untuk mendengarkan data
             const fanData2 = snapshot.val(); // Mengambil data dari Firebase
             if (fanData2) {
@@ -259,7 +262,7 @@ const formatTime = (dateString: string) => {
 
 // Ambil data dari Firebase ketika komponen dimuat
     useEffect(() => {
-        const heaterRef = ref(database, 'actuators-current/Heater'); // Path to heater data
+        const heaterRef = ref(database, 'actuator-state/Heater'); // Path to heater data
         onValue(heaterRef, snapshot => { // Menggunakan onValue untuk mendengarkan data
             const heaterData = snapshot.val(); // Mengambil data dari Firebase
             if (heaterData) {
@@ -329,20 +332,64 @@ const handleDeleteSchedule = (scheduleDate: string) => {
 
 
 
+useEffect(() => {
+    const manualControlRef = ref(database, 'Manual-control/status'); // Path to the status in Firebase
+    onValue(manualControlRef, snapshot => {
+        const status = snapshot.val(); // Get the status from Firebase
+        if (status) {
+            setManualControlStatus(status === "on"); // Convert to boolean ("on" -> true, "off" -> false)
+        }
+    });
+}, []);
 
 
+const toggleManualControlStatus = () => {
+    const newStatus = !manualControlStatus; // Toggle the status
+    setManualControlStatus(newStatus); // Update the state
 
+    // Update the Firebase status
+    const manualControlRef = ref(database, 'Manual-control/status');
+    set(manualControlRef, newStatus ? "on" : "off"); // Update Firebase with the new status
+};
 
-
-
-
+const isDisabled = manualControlStatus;
 
     return (
         <React.Fragment>
 
+<div className="order-1 col-span-12 2xl:row-span-1 card">
+    <div className="card-body">
+        <div className="flex flex-col items-start">
+            <div className="w-full text-center">
+                <h2 className="text-sm font-medium">Manual Control Status</h2>
+            </div>
+            <div className="flex justify-between w-full">
+                <div className="flex flex-col items-start">
+                    <label htmlFor="skyDefaultSwitch" className="inline-block text-sm font-medium text-left">Manual Control Status</label>
+                </div>
+                <div className="flex items-center">
+                    <div className="relative inline-block w-10 align-middle transition duration-200 ease-in ltr:mr-2 rtl:ml-2">
+                        <input
+                            type="checkbox"
+                            id="manual"
+                            className="absolute block size-5 transition duration-300 ease-linear border-2 rounded-full appearance-none cursor-pointer border-slate-200 dark:border-zink-500 bg-white/80 dark:bg-zink-400 peer/published checked:bg-white dark:checked:bg-white ltr:checked:right-0 rtl:checked:left-0 checked:bg-none checked:border-sky-500 dark:checked:border-sky-500 arrow-none"
+                            checked={manualControlStatus} // Bind the checkbox to the state
+                            onChange={toggleManualControlStatus} // Call toggle function when checkbox is changed
+                        />
+                        <label htmlFor="manual" className="block h-5 overflow-hidden duration-300 ease-linear border rounded-full cursor-pointer transition border-slate-200 dark:border-zink-500 bg-slate-200 dark:bg-zink-600 peer-checked/published:bg-sky-500 peer-checked/published:border-sky-500"></label>
+                    </div>
+                    <span className="ml-2 text-xs">{manualControlStatus ? "On" : "Off"}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
                     {/* FAN1 */}
 
-                    <div className="order-5 md:col-span-4 lg:col-span-4 col-span-12 2xl:order-1 card 2xl:col-span-4 2xl:row-span-1">
+                    <div className="order-5 md:col-span-4 lg:col-span-4 col-span-12 2xl:order-2 card 2xl:col-span-4 2xl:row-span-1">
                         <div className="card-body">
                             <div className="flex flex-col items-start">
                                 {/* Teks Fan Control di tengah */}
@@ -364,6 +411,8 @@ const handleDeleteSchedule = (scheduleDate: string) => {
                                                 className="absolute block size-5 transition duration-300 ease-linear border-2 rounded-full appearance-none cursor-pointer border-slate-200 dark:border-zink-500 bg-white/80 dark:bg-zink-400 peer/published checked:bg-white dark:checked:bg-white ltr:checked:right-0 rtl:checked:left-0 checked:bg-none checked:border-sky-500 dark:checked:border-sky-500 arrow-none"
                                                 checked={fanStatus}
                                                 onChange={toggleFanStatus}
+                                                disabled={isDisabled}
+                                                
                                             />
                                             <label htmlFor="skyDefaultSwitch" className="block h-5 overflow-hidden duration-300 ease-linear border rounded-full cursor-pointer transition border-slate-200 dark:border-zink-500 bg-slate-200 dark:bg-zink-600 peer-checked/published:bg-sky-500 peer-checked/published:border-sky-500"></label>
                                         </div>
@@ -379,6 +428,7 @@ const handleDeleteSchedule = (scheduleDate: string) => {
                                             type="range"
                                             min="0"
                                             max="100"
+                                            disabled={isDisabled}
                                             value={fanSpeed}
                                             onChange={changeFanSpeed}
                                             style={{ width: "70%" }}
@@ -407,7 +457,7 @@ const handleDeleteSchedule = (scheduleDate: string) => {
 
 
             {/* FAN CONTROL 2 */}
-            <div className="order-4 md:col-span-4 lg:col-span-4 col-span-12 2xl:order-2 card 2xl:col-span-4 2xl:row-span-1">
+            <div className="order-4 md:col-span-4 lg:col-span-4 col-span-12 2xl:order-3 card 2xl:col-span-4 2xl:row-span-1">
                 <div className="card-body">
                     <div className="flex flex-col items-start">
                         {/* Fan Control 2 Title */}
@@ -431,6 +481,7 @@ const handleDeleteSchedule = (scheduleDate: string) => {
                                                     className="absolute block size-5 transition duration-300 ease-linear border-2 rounded-full appearance-none cursor-pointer border-slate-200 dark:border-zink-500 bg-white/80 dark:bg-zink-400 peer/published checked:bg-white dark:checked:bg-white ltr:checked:right-0 rtl:checked:left-0 checked:bg-none checked:border-sky-500 dark:checked:border-sky-500 arrow-none"
                                                     checked={fanStatus2}
                                                     onChange={toggleFanStatus2}
+                                                    disabled={isDisabled}
                                                 />
                                                 <label htmlFor="fanStatusSwitch2" className="block h-5 overflow-hidden duration-300 ease-linear border rounded-full cursor-pointer transition border-slate-200 dark:border-zink-500 bg-slate-200 dark:bg-zink-600 peer-checked/published:bg-sky-500 peer-checked/published:border-sky-500"></label>
                                             </div>
@@ -447,6 +498,7 @@ const handleDeleteSchedule = (scheduleDate: string) => {
                                     type="range"
                                     min="0"
                                     max="100"
+                                    disabled={isDisabled}
                                     value={fanSpeed2}
                                     onChange={changeFanSpeed2}
                                     style={{ width: "70%" }}
@@ -483,7 +535,7 @@ const handleDeleteSchedule = (scheduleDate: string) => {
 
 
                         {/* Heater Control */}
-                        <div className="order-3 md:col-span-4 lg:col-span-4 col-span-12 2xl:order-3 card 2xl:col-span-4 2xl:row-span-1">
+                        <div className="order-3 md:col-span-4 lg:col-span-4 col-span-12 2xl:order-4 card 2xl:col-span-4 2xl:row-span-1">
                             <div className="card-body">
                                 <div className="flex flex-col items-start">
                                     {/* Heater Control Title */}
@@ -508,6 +560,7 @@ const handleDeleteSchedule = (scheduleDate: string) => {
                                                     className="absolute block size-5 transition duration-300 ease-linear border-2 rounded-full appearance-none cursor-pointer border-slate-200 dark:border-zink-500 bg-white/80 dark:bg-zink-400 peer/published checked:bg-white dark:checked:bg-white ltr:checked:right-0 rtl:checked:left-0 checked:bg-none checked:border-sky-500 dark:checked:border-sky-500 arrow-none"
                                                     checked={heaterStatus}
                                                     onChange={toggleHeaterStatus}
+                                                    disabled={isDisabled}
                                                 />
                                                 <label htmlFor="heaterStatusSwitch" className="block h-5 overflow-hidden duration-300 ease-linear border rounded-full cursor-pointer transition border-slate-200 dark:border-zink-500 bg-slate-200 dark:bg-zink-600 peer-checked/published:bg-sky-500 peer-checked/published:border-sky-500"></label>
                                             </div>
@@ -542,7 +595,7 @@ const handleDeleteSchedule = (scheduleDate: string) => {
 
              {/* Upcoming Schedules Section */}         
             <Tab.Container defaultActiveKey="upcomingSchedules">
-                <div className="order-1 md:col-span-4 lg:col-span-4 col-span-12 2xl:order-4 card 2xl:col-span-4 2xl:row-span-1">
+                <div className="order-1 md:col-span-4 lg:col-span-4 col-span-12 2xl:order-5 card 2xl:col-span-4 2xl:row-span-1">
                     <div className="card-body">
                         <h6 className="text-15 mb-4">Upcoming Feed Schedules</h6>
                         <Tab.Content className="relative h-[200px] overflow-y-auto">
@@ -587,7 +640,7 @@ const handleDeleteSchedule = (scheduleDate: string) => {
 
 
             {/* Chicken Feeder Section */}
-            <div className="order-2 md:col-span-8 lg:col-span-8 col-span-12 2xl:order-5 card 2xl:col-span-8 2xl:row-span-1">
+            <div className="order-2 md:col-span-8 lg:col-span-8 col-span-12 2xl:order-6 card 2xl:col-span-8 2xl:row-span-1">
                 <div className="card-body">
                     <div className="flex flex-col gap-4 mb-1 md:mb-3 md:items-center md:flex-row">
                         <h6 className="grow text-15">Automatic Chicken Farm Overview</h6>
@@ -610,12 +663,14 @@ const handleDeleteSchedule = (scheduleDate: string) => {
                                 <label htmlFor="DefaultRange" className="inline-block text-base font-medium">Feed the Chickens</label>
                                 <div className="flex items-center">
                                     <input
-                                        type="range"
+                                        type="number"
                                         min="0"
-                                        max="100"
+                                        max="5000"
                                         value={value}
                                         onChange={handleChange}
-                                        className="w-full h-2 rounded-md bg-slate-200 dark:bg-zink-600 slider"
+                                        step="20"
+                                        className="form-input"
+                                        // className="w-full h-8 rounded-md bg-slate-200 dark:bg-zink-600 slider"
                                         id="DefaultRange"
                                     />
                                     <p className="ml-2 text-center text-white bg-blue-500 p-2 rounded">{feedAmount} Grams</p>
@@ -635,9 +690,9 @@ const handleDeleteSchedule = (scheduleDate: string) => {
                                 )}
                             </div>
                         </div>
-                        <img src={GIF} className="col-span-1" alt="Example GIF" style={{ maxWidth: '70%', maxHeight: '70%' }} key={Date.now()} />
+                        {/* <img src={GIF} className="col-span-1" alt="Example GIF" style={{ maxWidth: '70%', maxHeight: '70%' }} key={Date.now()} /> */}
                     </div>
-                    <div className="mt-4 mx-auto flex justify-center gap-3">
+                    <div className="mt-4 mx-auto flex justify-center gap-3 pt-12">
                     {/* <button className="mr-2 border-2 border-blue-500 text-blue-500 rounded p-0.5 text-base sm:p-0.2 sm:text-sm w-full sm:w-400">
                         Schedule it
                     </button> */}

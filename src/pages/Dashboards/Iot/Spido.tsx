@@ -141,13 +141,13 @@ useEffect(() => {
         sensorColor="red"
         id="gauge-chart-1"
         minValue={10}
-        maxValue={35}
+        maxValue={40}
         thresholds={[
-          { limit: 15, color: '#EA4228', tooltipText: 'Too low temperature!' },
-          { limit: 17, color: '#F5CD19', tooltipText: 'Low temperature!' },
-          { limit: 30, color: '#5BE12C', tooltipText: 'OK temperature!' },
-          { limit: 32, color: '#F5CD19', tooltipText: 'High temperature!' },
-          { limit: 35, color: '#EA4228', tooltipText: 'Too high temperature!' },
+          { limit: 22, color: '#EA4228', tooltipText: 'Too low temperature!' },
+          { limit: 23, color: '#F5CD19', tooltipText: 'Low temperature!' },
+          { limit: 33, color: '#5BE12C', tooltipText: 'OK temperature!' },
+          { limit: 34, color: '#F5CD19', tooltipText: 'High temperature!' },
+          { limit: 40, color: '#EA4228', tooltipText: 'Too high temperature!' },
         ]}
       />
 
@@ -206,13 +206,13 @@ useEffect(() => {
         sensorColor="red"
         id="gauge-chart-1"
         minValue={10}
-        maxValue={35}
+        maxValue={40}
         thresholds={[
-          { limit: 15, color: '#EA4228', tooltipText: 'Too low temperature!' },
-          { limit: 17, color: '#F5CD19', tooltipText: 'Low temperature!' },
-          { limit: 30, color: '#5BE12C', tooltipText: 'OK temperature!' },
-          { limit: 32, color: '#F5CD19', tooltipText: 'High temperature!' },
-          { limit: 35, color: '#EA4228', tooltipText: 'Too high temperature!' },
+          { limit: 22, color: '#EA4228', tooltipText: 'Too low temperature!' },
+          { limit: 23, color: '#F5CD19', tooltipText: 'Low temperature!' },
+          { limit: 33, color: '#5BE12C', tooltipText: 'OK temperature!' },
+          { limit: 34, color: '#F5CD19', tooltipText: 'High temperature!' },
+          { limit: 40, color: '#EA4228', tooltipText: 'Too high temperature!' },
         ]}
       />
 
@@ -224,11 +224,11 @@ useEffect(() => {
         sensorColor="purple"
         id="gauge-chart-5"
         minValue={0}
-        maxValue={100}
+        maxValue={150}
         thresholds={[
-          { limit: 5, color: '#5BE12C', tooltipText: 'OK dust level!' },
-          { limit: 10, color: '#F5CD19', tooltipText: 'High dust level!' },
-          { limit: 100, color: '#EA4228', tooltipText: 'Too high dust level!' },
+          { limit: 100, color: '#5BE12C', tooltipText: 'OK dust level!' },
+          { limit: 120, color: '#F5CD19', tooltipText: 'High dust level!' },
+          { limit: 150, color: '#EA4228', tooltipText: 'Too high dust level!' },
         ]}
       />
 
@@ -240,11 +240,11 @@ useEffect(() => {
         sensorColor="purple"
         id="gauge-chart-5"
         minValue={0}
-        maxValue={100}
+        maxValue={150}
         thresholds={[
-          { limit: 5, color: '#5BE12C', tooltipText: 'OK dust level!' },
-          { limit: 10, color: '#F5CD19', tooltipText: 'High dust level!' },
-          { limit: 100, color: '#EA4228', tooltipText: 'Too high dust level!' },
+          { limit: 100, color: '#5BE12C', tooltipText: 'OK dust level!' },
+          { limit: 120, color: '#F5CD19', tooltipText: 'High dust level!' },
+          { limit: 150, color: '#EA4228', tooltipText: 'Too high dust level!' },
         ]}
       />
 

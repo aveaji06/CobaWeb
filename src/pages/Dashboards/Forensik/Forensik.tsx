@@ -3,10 +3,12 @@ import Flatpickr from 'react-flatpickr';
 import "flatpickr/dist/flatpickr.css";
 import { 
     EnvironmentComparisonChartSuhu,
+    EnvironmentComparisonChartSuhuLingkungan,
     EnvironmentComparisonChartKelembaban,
     EnvironmentComparisonChartCO2,
     EnvironmentComparisonChartDebu,
-    EnvironmentComparisonChartNH3 
+    EnvironmentComparisonChartNH3,
+    EnvironmentComparisonChartDebu2_5 
 } from './Charts';
 
 const Forensik = () => {
@@ -73,12 +75,14 @@ const Forensik = () => {
                     onChange={handleSensorChange}
                     className="form-select dark:bg-gray-700 dark:text-white text-black"
                 >
-                    <option value="">Pilih Sensor</option>
-                    <option value="suhu">Suhu</option>
+                    <option value="" disabled>Pilih Sensor</option> 
+                    <option value="suhu">Suhu Ayam</option>
+                    <option value="suhuling">Suhu Lingkungan</option>
                     <option value="kelembaban">Kelembaban</option>
                     <option value="CO2">CO2</option>
                     <option value="NH3">NH3</option>
-                    <option value="Debu">Debu</option>
+                    <option value="Debu10">Debu PM 10</option>
+                    <option value="Debu2_5">Debu PM 2,5</option>
                 </select>
             </div>
 
@@ -114,6 +118,11 @@ const Forensik = () => {
                     <EnvironmentComparisonChartSuhu chartId="environmentDataChartSuhu" selectedDateRange={selectedDateRange} />
                 </div>
             )}
+            {selectedSensor && selectedDateRange && selectedSensor === "suhuling" && (
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartSuhuLingkungan chartId="environmentDataChartSuhuLingkungan" selectedDateRange={selectedDateRange} />
+                </div>
+            )}
             {selectedSensor && selectedDateRange && selectedSensor === "kelembaban" && (
                 <div className="col-span-12 w-full">
                     <EnvironmentComparisonChartKelembaban chartId="environmentDataChartKelembaban" selectedDateRange={selectedDateRange} />
@@ -129,9 +138,14 @@ const Forensik = () => {
                     <EnvironmentComparisonChartNH3 chartId="environmentDataChartNH3" selectedDateRange={selectedDateRange} />
                 </div>
             )}
-            {selectedSensor && selectedDateRange && selectedSensor === "Debu" && (
+            {selectedSensor && selectedDateRange && selectedSensor === "Debu10" && (
                 <div className="col-span-12 w-full">
                     <EnvironmentComparisonChartDebu chartId="environmentDataChartDebu" selectedDateRange={selectedDateRange} />
+                </div>
+            )}
+            {selectedSensor && selectedDateRange && selectedSensor === "Debu2_5" && (
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartDebu2_5 chartId="environmentDataChartDebu2_5" selectedDateRange={selectedDateRange} />
                 </div>
             )}
 
@@ -145,12 +159,14 @@ const Forensik = () => {
                         onChange={handleSecondSensorChange}
                         className="form-select dark:bg-gray-700 dark:text-white text-black"
                     >
-                        <option value="">Pilih Sensor</option>
-                        <option value="suhu">Suhu</option>
-                        <option value="kelembaban">Kelembaban</option>
-                        <option value="CO2">CO2</option>
-                        <option value="NH3">NH3</option>
-                        <option value="Debu">Debu</option>
+                    <option value="" disabled>Pilih Sensor</option> 
+                    <option value="suhu">Suhu Ayam</option>
+                    <option value="suhuling">Suhu Lingkungan</option>
+                    <option value="kelembaban">Kelembaban</option>
+                    <option value="CO2">CO2</option>
+                    <option value="NH3">NH3</option>
+                    <option value="Debu10">Debu PM 10</option>
+                    <option value="Debu2_5">Debu PM 2,5</option>
                     </select>
                 </div>
             )}
@@ -187,6 +203,12 @@ const Forensik = () => {
                     <EnvironmentComparisonChartSuhu chartId="environmentDataChartSuhuSecond" selectedDateRange={secondSelectedDateRange} />
                 </div>
             )}
+                        {/* Render Chart Based on Second Selected Sensor */}
+            {secondSelectedSensor && secondSelectedDateRange && secondSelectedSensor === "suhuling" && (
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartSuhuLingkungan chartId="environmentDataChartSuhuLingkunganSecond" selectedDateRange={secondSelectedDateRange} />
+                </div>
+            )}
             {secondSelectedSensor && secondSelectedDateRange && secondSelectedSensor === "kelembaban" && (
                 <div className="col-span-12 w-full">
                     <EnvironmentComparisonChartKelembaban chartId="environmentDataChartKelembabanSecond" selectedDateRange={secondSelectedDateRange} />
@@ -202,12 +224,16 @@ const Forensik = () => {
                     <EnvironmentComparisonChartNH3 chartId="environmentDataChartNH3Second" selectedDateRange={secondSelectedDateRange} />
                 </div>
             )}
-            {secondSelectedSensor && secondSelectedDateRange && secondSelectedSensor === "Debu" && (
+            {secondSelectedSensor && secondSelectedDateRange && secondSelectedSensor === "Debu10" && (
                 <div className="col-span-12 w-full">
                     <EnvironmentComparisonChartDebu chartId="environmentDataChartDebuSecond" selectedDateRange={secondSelectedDateRange} />
                 </div>
             )}
-
+            {secondSelectedSensor && secondSelectedDateRange && secondSelectedSensor === "Debu2_5" && (
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartDebu2_5 chartId="environmentDataChartDebu2_5Second" selectedDateRange={secondSelectedDateRange} />
+                </div>
+            )}
             {/* Button to remove second sensor selection */}
             {secondSelectedSensor && (
                 <div className="col-span-12 mb-4">

@@ -82,6 +82,85 @@ const EnvironmentComparisonChartSuhu = ({ chartId, selectedDateRange }: any) => 
     );
 };
 
+
+const EnvironmentComparisonChartSuhuLingkungan = ({ chartId, selectedDateRange }: any) => {
+    const chartColors = useChartColors(chartId);
+    const [datasensor, setSensorData] = useState<any[] | null>(null);
+
+    useEffect(() => {
+        if (selectedDateRange) {
+            const startDate = selectedDateRange[0].toLocaleDateString();
+            const endDate = selectedDateRange[1].toLocaleDateString();
+            fetch(`https://ta-ayam-be.vercel.app/api/forensic/RTD_Temp?start_date=${startDate}&end_date=${endDate}`)
+                .then(res => res.json())
+                .then(data => {
+                    console.log("Sensor Data Suhu Lingkungan:", data);
+                    if (Array.isArray(data)) {
+                        setSensorData(data);
+                    } else {
+                        console.error("Data is not an array:", data);
+                        setSensorData([]); // Set empty array if the response is not valid
+                    }
+                })
+                .catch(error => {
+                    console.error("Fetch error:", error);
+                    setSensorData([]); // Handle error by setting an empty array
+                });
+        }
+    }, [selectedDateRange]);
+
+    // Check if datasensor is valid (array) before attempting to map over it
+    if (!datasensor || !Array.isArray(datasensor)) {
+        return <p>Loading data suhu lingkungan...</p>;
+    }
+
+    const formattedData = datasensor.map((item) => ({
+        label: dayjs(item.tanggal).locale('id').format("D MMMM YY"), // Format: 7 Juni 2025
+        value: item.nilai,
+    }));
+
+    const uniqueLabels = formattedData.map((item, index, self) =>
+        index > 0 && item.label === self[index - 1].label ? "" : item.label
+    );
+
+    const series = [
+        {
+            name: "Suhu Lingkungan",
+            data: formattedData.map((item) => item.value),
+        },
+    ];
+
+    const options: any = {
+        chart: {
+            height: 350,
+            type: "line",
+            zoom: { enabled: false },
+            toolbar: { show: false },
+        },
+        stroke: {
+            curve: "smooth",
+            width: 2,
+        },
+        dataLabels: { enabled: false },
+        colors: chartColors,
+        xaxis: {
+            categories: uniqueLabels,
+        }
+    };
+
+    return (
+        <div className="chart-container">
+            <h2>Grafik Suhu Lingkungan</h2>
+            <ReactApexChart
+                options={options}
+                series={series}
+                type="line"
+                height={200}
+            />
+        </div>
+    );
+};
+
 // Similar updates for other charts: Kelembaban, CO2, NH3, and Debu
 
 // Kelembaban Chart
@@ -395,11 +474,90 @@ const EnvironmentComparisonChartDebu = ({ chartId, selectedDateRange }: any) => 
         </div>
     );
 };
+// Debu Chart
+const EnvironmentComparisonChartDebu2_5 = ({ chartId, selectedDateRange }: any) => {
+    const chartColors = useChartColors(chartId);
+    const [datasensor, setSensorData] = useState<any[] | null>(null);
+
+    useEffect(() => {
+        if (selectedDateRange) {
+            const startDate = selectedDateRange[0].toLocaleDateString();
+            const endDate = selectedDateRange[1].toLocaleDateString();
+            fetch(`https://ta-ayam-be.vercel.app/api/forensic/PM2_5?start_date=${startDate}&end_date=${endDate}`)
+                .then(res => res.json())
+                .then(data => {
+                    console.log("Sensor Data PM2_5:", data);
+                    if (Array.isArray(data)) {
+                        setSensorData(data);
+                    } else {
+                        console.error("Data is not an array:", data);
+                        setSensorData([]);
+                    }
+                })
+                .catch(error => {
+                    console.error("Fetch error:", error);
+                    setSensorData([]);
+                });
+        }
+    }, [selectedDateRange]);
+
+    if (!datasensor || !Array.isArray(datasensor)) {
+        return <p>Loading data PM2_5...</p>;
+    }
+
+    const formattedData = datasensor.map((item) => ({
+        label: dayjs(item.tanggal).locale('id').format("D MMMM YY"),
+        value: item.nilai,
+    }));
+
+    const uniqueLabels = formattedData.map((item, index, self) =>
+        index > 0 && item.label === self[index - 1].label ? "" : item.label
+    );
+
+    const series = [
+        {
+            name: "PM2_5 Kandang",
+            data: formattedData.map((item) => item.value),
+        },
+    ];
+
+    const options: any = {
+        chart: {
+            height: 350,
+            type: "line",
+            zoom: { enabled: false },
+            toolbar: { show: false },
+        },
+        stroke: {
+            curve: "smooth",
+            width: 2,
+        },
+        dataLabels: { enabled: false },
+        colors: chartColors,
+        xaxis: {
+            categories: uniqueLabels,
+        }
+    };
+
+    return (
+        <div className="chart-container">
+            <h2>Grafik PM 2.5 Kandang</h2>
+            <ReactApexChart
+                options={options}
+                series={series}
+                type="line"
+                height={200}
+            />
+        </div>
+    );
+};
 
 export {
     EnvironmentComparisonChartSuhu,
+    EnvironmentComparisonChartSuhuLingkungan,
     EnvironmentComparisonChartKelembaban,
     EnvironmentComparisonChartCO2,
     EnvironmentComparisonChartNH3,
-    EnvironmentComparisonChartDebu
+    EnvironmentComparisonChartDebu,
+    EnvironmentComparisonChartDebu2_5
 };

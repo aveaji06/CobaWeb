@@ -20,7 +20,10 @@ import {
     ShoppingBag, Sprout,
     Table, ThermometerSun,
     Trophy,
-    UserRound
+    UserRound,
+    HeartPulse,
+    BarChart,
+    LucideLineChart
 }
     from "lucide-react";
 
@@ -34,6 +37,13 @@ const menuData: any = [
         label: 'Dashboards',
         link: "/dashboard",
         icon: <MonitorDot />,
+
+    },
+        {
+        id: "data historis",
+        label: 'Data Historis',
+        link: "/dashboards-example",
+        icon: <LucideLineChart/>,
 
     },
     {
@@ -54,34 +64,28 @@ const menuData: any = [
         id: "analytics",
         label: 'Analytics',
         link: "/dashboards-analytics",
-        icon: <Sprout/>,
-
-    },
-
-    {
-        id: "example",
-        label: 'Example',
-        link: "/dashboards-example",
-        icon: <Sprout/>,
-
-    },
-
-    {
-        id: "example1",
-        label: 'Example 1',
-        link: "/dashboards-example1",
-        icon: <Sprout/>,
+        icon: <HeartPulse/>,
 
     },
 
 
-        {
-        id: "example2",
-        label: 'Example 2',
-        link: "/dashboards-example2",
-        icon: <Sprout/>,
 
-    },
+    // {
+    //     id: "example1",
+    //     label: 'Example 1',
+    //     link: "/dashboards-example1",
+    //     icon: <Sprout/>,
+
+    // },
+
+
+    //     {
+    //     id: "example2",
+    //     label: 'Example 2',
+    //     link: "/dashboards-example2",
+    //     icon: <Sprout/>,
+
+    // },
 ]
 const menuData2: any = [
     {
