@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
-
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 
 //   const DB_CONFIG ={
@@ -14,6 +14,7 @@ import { getDatabase } from "firebase/database";
 //   measurementId: "G-3GGND3QPB8"
 // };
 
+
 const DB_CONFIG = {
   apiKey: "AIzaSyBcQ1reTukrVZAHVfF1ACuTO5uMfH5nGHE",
   authDomain: "taayam-9bab6.firebaseapp.com",
@@ -24,6 +25,7 @@ const DB_CONFIG = {
   appId: "1:612969401904:web:24becee2bc4280f82067f5",
   measurementId: "G-WH6C9NJPBD"
 };
+
 
 
 // // Your web app's Firebase configuration
@@ -39,5 +41,34 @@ const DB_CONFIG = {
   const app = initializeApp(DB_CONFIG);
   const database = getDatabase(app);
   
+
+  
+// Initialize Firebase Authentication
+const auth = getAuth(app);
+
+// Sign in using email and password
+const signInWithEmail = async () => {
+const email = "taayam14@gmail.com"; // User email
+const password = "S1dangjuli"; // User password
+
+try {
+  const userCredential = await signInWithEmailAndPassword(auth, email, password);
+  const user = userCredential.user;
+  console.log("User signed in: ", user);
+
+  // Now you can interact with the Firebase Realtime Database using `database`
+  // For example, accessing data:
+  // const userRef = ref(database, 'path/to/data');
+  // onValue(userRef, snapshot => {
+  //   console.log(snapshot.val());
+  // });
+
+  } catch (error) {
+    console.error("Error signing in: ", error);
+  }
+};
+
+// Call the signIn function (you can call this in the appropriate lifecycle method)
+signInWithEmail();
   export { database };
   

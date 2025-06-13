@@ -33,7 +33,7 @@ const Actuator = () => {
 
     // Function to fetch and filter upcoming schedules from Firebase
     const fetchUpcomingSchedules = () => {
-        const schedulesRef = ref(database, 'coba/pakan');
+        const schedulesRef = ref(database, 'Automatic-Pakan');
         onValue(schedulesRef, snapshot => {
             const schedulesData = snapshot.val();
             if (schedulesData) {
@@ -117,7 +117,7 @@ const formatTime = (dateString: string) => {
             const formattedDate = formatDate(feedSchedule); // Get formatted date
 
             // Use set to save the data under the key with formatted date
-            const feedRef = ref(database, `coba/pakan/${formattedDate}`);
+            const feedRef = ref(database, `Automatic-Pakan/${formattedDate}`);
             set(feedRef, feedAmount); // Save the amount of feed with the formatted date as key
 
             setIsConfirmed1(true);
@@ -311,7 +311,7 @@ const formatTime = (dateString: string) => {
 
 
 const handleDeleteSchedule = (scheduleDate: string) => {
-    const scheduleRef = ref(database, `coba/pakan/${scheduleDate}`); // Referensi ke jadwal berdasarkan tanggal
+    const scheduleRef = ref(database, `Automatic-Pakan/${scheduleDate}`); // Referensi ke jadwal berdasarkan tanggal
 
     // Menghapus data dari Firebase
     set(scheduleRef, null)
