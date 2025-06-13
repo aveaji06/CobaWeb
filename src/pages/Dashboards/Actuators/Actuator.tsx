@@ -37,14 +37,14 @@ const Actuator = () => {
         onValue(schedulesRef, snapshot => {
             const schedulesData = snapshot.val();
             if (schedulesData) {
-                const currentDate = new Date(); // Current date and time
+    
                 const filteredSchedules = Object.keys(schedulesData).filter((key) => {
                     // Convert key to Date object for comparison
                     const scheduleDate = new Date(
                         `${key.slice(0, 4)}-${key.slice(4, 6)}-${key.slice(6, 8)}T${key.slice(9, 11)}:${key.slice(11, 13)}:00`
                     );
                     // Filter schedules that are today or in the future
-                    return scheduleDate >= currentDate;
+                    return scheduleDate
                 });
 
                 // Get the filtered schedules and map them to an array
