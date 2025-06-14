@@ -3,12 +3,12 @@ import Flatpickr from 'react-flatpickr';
 import "flatpickr/dist/flatpickr.css";
 import { 
     EnvironmentComparisonChartSuhu,
-    EnvironmentComparisonChartSuhuLingkungan,
+    EnvironmentComparisonChartRTDTemp,
     EnvironmentComparisonChartKelembaban,
     EnvironmentComparisonChartCO2,
     EnvironmentComparisonChartDebu,
     EnvironmentComparisonChartNH3,
-    EnvironmentComparisonChartDebu2_5 
+    EnvironmentComparisonChartPM2_5 
 } from './Charts';
 
 const Forensik = () => {
@@ -120,7 +120,7 @@ const Forensik = () => {
             )}
             {selectedSensor && selectedDateRange && selectedSensor === "suhuling" && (
                 <div className="col-span-12 w-full">
-                    <EnvironmentComparisonChartSuhuLingkungan chartId="environmentDataChartSuhuLingkungan" selectedDateRange={selectedDateRange} />
+                    <EnvironmentComparisonChartRTDTemp chartId="environmentDataChartSuhuLingkungan" selectedDateRange={selectedDateRange} />
                 </div>
             )}
             {selectedSensor && selectedDateRange && selectedSensor === "kelembaban" && (
@@ -145,7 +145,7 @@ const Forensik = () => {
             )}
             {selectedSensor && selectedDateRange && selectedSensor === "Debu2_5" && (
                 <div className="col-span-12 w-full">
-                    <EnvironmentComparisonChartDebu2_5 chartId="environmentDataChartDebu2_5" selectedDateRange={selectedDateRange} />
+                    <EnvironmentComparisonChartPM2_5 chartId="environmentDataChartDebu2_5" selectedDateRange={selectedDateRange} />
                 </div>
             )}
 
@@ -206,7 +206,7 @@ const Forensik = () => {
                         {/* Render Chart Based on Second Selected Sensor */}
             {secondSelectedSensor && secondSelectedDateRange && secondSelectedSensor === "suhuling" && (
                 <div className="col-span-12 w-full">
-                    <EnvironmentComparisonChartSuhuLingkungan chartId="environmentDataChartSuhuLingkunganSecond" selectedDateRange={secondSelectedDateRange} />
+                    <EnvironmentComparisonChartRTDTemp chartId="environmentDataChartSuhuLingkunganSecond" selectedDateRange={secondSelectedDateRange} />
                 </div>
             )}
             {secondSelectedSensor && secondSelectedDateRange && secondSelectedSensor === "kelembaban" && (
@@ -231,7 +231,7 @@ const Forensik = () => {
             )}
             {secondSelectedSensor && secondSelectedDateRange && secondSelectedSensor === "Debu2_5" && (
                 <div className="col-span-12 w-full">
-                    <EnvironmentComparisonChartDebu2_5 chartId="environmentDataChartDebu2_5Second" selectedDateRange={secondSelectedDateRange} />
+                    <EnvironmentComparisonChartPM2_5 chartId="environmentDataChartDebu2_5Second" selectedDateRange={secondSelectedDateRange} />
                 </div>
             )}
             {/* Button to remove second sensor selection */}

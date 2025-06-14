@@ -4,6 +4,7 @@ import useChartColors from "Common/useChartColors";
 import dayjs from "dayjs";
 import "dayjs/locale/id"; // Pastikan locale Indonesia di-import
 
+// Suhu Kandang Chart
 const EnvironmentComparisonChartSuhu = ({ chartId, selectedDateRange }: any) => {
     const chartColors = useChartColors(chartId);
     const [datasensor, setSensorData] = useState<any[] | null>(null);
@@ -30,7 +31,6 @@ const EnvironmentComparisonChartSuhu = ({ chartId, selectedDateRange }: any) => 
         }
     }, [selectedDateRange]);
 
-    // Check if datasensor is valid (array) before attempting to map over it
     if (!datasensor || !Array.isArray(datasensor)) {
         return <p>Loading data suhu...</p>;
     }
@@ -82,10 +82,10 @@ const EnvironmentComparisonChartSuhu = ({ chartId, selectedDateRange }: any) => 
     );
 };
 
-
-const EnvironmentComparisonChartSuhuLingkungan = ({ chartId, selectedDateRange }: any) => {
+// RTD_Temp Chart (Suhu Lingkungan) - Independently Processed
+const EnvironmentComparisonChartRTDTemp = ({ chartId, selectedDateRange }: any) => {
     const chartColors = useChartColors(chartId);
-    const [datasensor, setSensorData] = useState<any[] | null>(null);
+    const [rtdData, setRtdData] = useState<any[] | null>(null);
 
     useEffect(() => {
         if (selectedDateRange) {
@@ -94,38 +94,39 @@ const EnvironmentComparisonChartSuhuLingkungan = ({ chartId, selectedDateRange }
             fetch(`https://ta-ayam-be.vercel.app/api/forensic/RTD_Temp?start_date=${startDate}&end_date=${endDate}`)
                 .then(res => res.json())
                 .then(data => {
-                    console.log("Sensor Data Suhu Lingkungan:", data);
+                    console.log("Sensor Data Suhu Lingkungan (RTD):", data);
                     if (Array.isArray(data)) {
-                        setSensorData(data);
+                        setRtdData(data);
                     } else {
                         console.error("Data is not an array:", data);
-                        setSensorData([]); // Set empty array if the response is not valid
+                        setRtdData([]); // Set empty array if the response is not valid
                     }
                 })
                 .catch(error => {
                     console.error("Fetch error:", error);
-                    setSensorData([]); // Handle error by setting an empty array
+                    setRtdData([]); // Handle error by setting an empty array
                 });
         }
     }, [selectedDateRange]);
 
-    // Check if datasensor is valid (array) before attempting to map over it
-    if (!datasensor || !Array.isArray(datasensor)) {
+    if (!rtdData || !Array.isArray(rtdData)) {
         return <p>Loading data suhu lingkungan...</p>;
     }
 
-    const formattedData = datasensor.map((item) => ({
+    // Format RTD_Temp data separately and keep it independent
+    const formattedData = rtdData.map((item) => ({
         label: dayjs(item.tanggal).locale('id').format("D MMMM YY"), // Format: 7 Juni 2025
         value: item.nilai,
     }));
 
+    // Use RTD_Temp's own unique labels for X-axis (independent of other sensors)
     const uniqueLabels = formattedData.map((item, index, self) =>
         index > 0 && item.label === self[index - 1].label ? "" : item.label
     );
 
     const series = [
         {
-            name: "Suhu Lingkungan",
+            name: "Suhu Lingkungan (RTD)",
             data: formattedData.map((item) => item.value),
         },
     ];
@@ -144,13 +145,13 @@ const EnvironmentComparisonChartSuhuLingkungan = ({ chartId, selectedDateRange }
         dataLabels: { enabled: false },
         colors: chartColors,
         xaxis: {
-            categories: uniqueLabels,
+            categories: uniqueLabels, // Custom X-axis categories for RTD_Temp
         }
     };
 
     return (
         <div className="chart-container">
-            <h2>Grafik Suhu Lingkungan</h2>
+            <h2>Grafik Suhu Lingkungan (RTD)</h2>
             <ReactApexChart
                 options={options}
                 series={series}
@@ -160,8 +161,6 @@ const EnvironmentComparisonChartSuhuLingkungan = ({ chartId, selectedDateRange }
         </div>
     );
 };
-
-// Similar updates for other charts: Kelembaban, CO2, NH3, and Debu
 
 // Kelembaban Chart
 const EnvironmentComparisonChartKelembaban = ({ chartId, selectedDateRange }: any) => {
@@ -319,85 +318,7 @@ const EnvironmentComparisonChartCO2 = ({ chartId, selectedDateRange }: any) => {
     );
 };
 
-// NH3 Chart
-const EnvironmentComparisonChartNH3 = ({ chartId, selectedDateRange }: any) => {
-    const chartColors = useChartColors(chartId);
-    const [datasensor, setSensorData] = useState<any[] | null>(null);
-
-    useEffect(() => {
-        if (selectedDateRange) {
-            const startDate = selectedDateRange[0].toLocaleDateString();
-            const endDate = selectedDateRange[1].toLocaleDateString();
-            fetch(`https://ta-ayam-be.vercel.app/api/forensic/NH3?start_date=${startDate}&end_date=${endDate}`)
-                .then(res => res.json())
-                .then(data => {
-                    console.log("Sensor Data NH3:", data);
-                    if (Array.isArray(data)) {
-                        setSensorData(data);
-                    } else {
-                        console.error("Data is not an array:", data);
-                        setSensorData([]);
-                    }
-                })
-                .catch(error => {
-                    console.error("Fetch error:", error);
-                    setSensorData([]);
-                });
-        }
-    }, [selectedDateRange]);
-
-    if (!datasensor || !Array.isArray(datasensor)) {
-        return <p>Loading data NH3...</p>;
-    }
-
-    const formattedData = datasensor.map((item) => ({
-        label: dayjs(item.tanggal).locale('id').format("D MMMM YY"),
-        value: item.nilai,
-    }));
-
-    const uniqueLabels = formattedData.map((item, index, self) =>
-        index > 0 && item.label === self[index - 1].label ? "" : item.label
-    );
-
-    const series = [
-        {
-            name: "NH3 Kandang",
-            data: formattedData.map((item) => item.value),
-        },
-    ];
-
-    const options: any = {
-        chart: {
-            height: 350,
-            type: "line",
-            zoom: { enabled: false },
-            toolbar: { show: false },
-        },
-        stroke: {
-            curve: "smooth",
-            width: 2,
-        },
-        dataLabels: { enabled: false },
-        colors: chartColors,
-        xaxis: {
-            categories: uniqueLabels,
-        }
-    };
-
-    return (
-        <div className="chart-container">
-            <h2>Grafik NH3 Kandang</h2>
-            <ReactApexChart
-                options={options}
-                series={series}
-                type="line"
-                height={200}
-            />
-        </div>
-    );
-};
-
-// Debu Chart
+// Debu Chart (PM10)
 const EnvironmentComparisonChartDebu = ({ chartId, selectedDateRange }: any) => {
     const chartColors = useChartColors(chartId);
     const [datasensor, setSensorData] = useState<any[] | null>(null);
@@ -474,8 +395,10 @@ const EnvironmentComparisonChartDebu = ({ chartId, selectedDateRange }: any) => 
         </div>
     );
 };
-// Debu Chart
-const EnvironmentComparisonChartDebu2_5 = ({ chartId, selectedDateRange }: any) => {
+
+
+// PM2.5 Chart
+const EnvironmentComparisonChartPM2_5 = ({ chartId, selectedDateRange }: any) => {
     const chartColors = useChartColors(chartId);
     const [datasensor, setSensorData] = useState<any[] | null>(null);
 
@@ -491,12 +414,12 @@ const EnvironmentComparisonChartDebu2_5 = ({ chartId, selectedDateRange }: any) 
                         setSensorData(data);
                     } else {
                         console.error("Data is not an array:", data);
-                        setSensorData([]);
+                        setSensorData([]); // Set empty array if the response is not valid
                     }
                 })
                 .catch(error => {
                     console.error("Fetch error:", error);
-                    setSensorData([]);
+                    setSensorData([]); // Handle error by setting an empty array
                 });
         }
     }, [selectedDateRange]);
@@ -516,7 +439,7 @@ const EnvironmentComparisonChartDebu2_5 = ({ chartId, selectedDateRange }: any) 
 
     const series = [
         {
-            name: "PM2_5 Kandang",
+            name: "PM2.5 Kandang",
             data: formattedData.map((item) => item.value),
         },
     ];
@@ -541,7 +464,7 @@ const EnvironmentComparisonChartDebu2_5 = ({ chartId, selectedDateRange }: any) 
 
     return (
         <div className="chart-container">
-            <h2>Grafik PM 2.5 Kandang</h2>
+            <h2>Grafik PM2.5 Kandang</h2>
             <ReactApexChart
                 options={options}
                 series={series}
@@ -552,12 +475,89 @@ const EnvironmentComparisonChartDebu2_5 = ({ chartId, selectedDateRange }: any) 
     );
 };
 
+// NH3 Chart
+const EnvironmentComparisonChartNH3 = ({ chartId, selectedDateRange }: any) => {
+    const chartColors = useChartColors(chartId);
+    const [datasensor, setSensorData] = useState<any[] | null>(null);
+
+    useEffect(() => {
+        if (selectedDateRange) {
+            const startDate = selectedDateRange[0].toLocaleDateString();
+            const endDate = selectedDateRange[1].toLocaleDateString();
+            fetch(`https://ta-ayam-be.vercel.app/api/forensic/NH3?start_date=${startDate}&end_date=${endDate}`)
+                .then(res => res.json())
+                .then(data => {
+                    console.log("Sensor Data NH3:", data);
+                    if (Array.isArray(data)) {
+                        setSensorData(data);
+                    } else {
+                        console.error("Data is not an array:", data);
+                        setSensorData([]); // Set empty array if the response is not valid
+                    }
+                })
+                .catch(error => {
+                    console.error("Fetch error:", error);
+                    setSensorData([]); // Handle error by setting an empty array
+                });
+        }
+    }, [selectedDateRange]);
+
+    if (!datasensor || !Array.isArray(datasensor)) {
+        return <p>Loading data NH3...</p>;
+    }
+
+    const formattedData = datasensor.map((item) => ({
+        label: dayjs(item.tanggal).locale('id').format("D MMMM YY"),
+        value: item.nilai,
+    }));
+
+    const uniqueLabels = formattedData.map((item, index, self) =>
+        index > 0 && item.label === self[index - 1].label ? "" : item.label
+    );
+
+    const series = [
+        {
+            name: "NH3 Kandang",
+            data: formattedData.map((item) => item.value),
+        },
+    ];
+
+    const options: any = {
+        chart: {
+            height: 350,
+            type: "line",
+            zoom: { enabled: false },
+            toolbar: { show: false },
+        },
+        stroke: {
+            curve: "smooth",
+            width: 2,
+        },
+        dataLabels: { enabled: false },
+        colors: chartColors,
+        xaxis: {
+            categories: uniqueLabels,
+        }
+    };
+
+    return (
+        <div className="chart-container">
+            <h2>Grafik NH3 Kandang</h2>
+            <ReactApexChart
+                options={options}
+                series={series}
+                type="line"
+                height={200}
+            />
+        </div>
+    );
+};
 export {
     EnvironmentComparisonChartSuhu,
-    EnvironmentComparisonChartSuhuLingkungan,
+    EnvironmentComparisonChartRTDTemp,
     EnvironmentComparisonChartKelembaban,
     EnvironmentComparisonChartCO2,
-    EnvironmentComparisonChartNH3,
     EnvironmentComparisonChartDebu,
-    EnvironmentComparisonChartDebu2_5
+    EnvironmentComparisonChartPM2_5,
+    EnvironmentComparisonChartNH3,
 };

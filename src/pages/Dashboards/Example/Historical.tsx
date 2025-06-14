@@ -7,42 +7,39 @@ interface SensorData {
   kelembaban: { tanggal: string; nilai: number }[];
   CO2: { tanggal: string; nilai: number }[];
   NH3: { tanggal: string; nilai: number }[];
-  RTD_Temp: { tanggal: string; nilai: number }[];
   debu: { tanggal: string; nilai: number }[];
   PM2_5: { tanggal: string; nilai: number }[];
   cahaya: { tanggal: string; nilai: number }[];
 }
 
-// Define sensor endpoints
+interface RTDData {
+  tanggal: string;
+  nilai: number;
+}
+
 const sensorEndpoints: Record<string, string> = {
-  // suhu: "https://ta-ayam-be.vercel.app/api/sensor/suhu",
-  // kelembaban: "https://ta-ayam-be.vercel.app/api/sensor/kelembaban",
-  // CO2: "https://ta-ayam-be.vercel.app/api/sensor/CO2",
-  // NH3: "https://ta-ayam-be.vercel.app/api/sensor/NH3",
-  // debu: "https://ta-ayam-be.vercel.app/api/sensor/debu",
-  // cahaya: "https://ta-ayam-be.vercel.app/api/sensor/cahaya"
   suhu: "https://ta-ayam-be.vercel.app/api/sensor/Temperature",
   kelembaban: "https://ta-ayam-be.vercel.app/api/sensor/Humidity",
   CO2: "https://ta-ayam-be.vercel.app/api/sensor/CO2",
   NH3: "https://ta-ayam-be.vercel.app/api/sensor/NH3",
-  RTD_Temp: "https://ta-ayam-be.vercel.app/api/sensor/RTD_Temp",
   debu: "https://ta-ayam-be.vercel.app/api/sensor/PM10",
   PM2_5: "https://ta-ayam-be.vercel.app/api/sensor/PM2_5",
-  cahaya: "https://ta-ayam-be.vercel.app/api/sensor/Light"
+  cahaya: "https://ta-ayam-be.vercel.app/api/sensor/Light",
+  RTD_Temp: "https://ta-ayam-be.vercel.app/api/sensor/RTD_Temp", // Endpoint for RTD_Temp
 };
 
 const Historis: React.FC = () => {
-  // Use the SensorData type for the state
   const [sensorData, setSensorData] = useState<SensorData>({
     suhu: [],
     kelembaban: [],
     CO2: [],
     NH3: [],
-    RTD_Temp: [],
     debu: [],
-    PM2_5:[],
+    PM2_5: [],
     cahaya: [],
   });
+
+  const [rtdData, setRtdData] = useState<RTDData[]>([]); // State for RTD_Temp data
 
   // Function to fetch sensor data from the given URL
   const fetchSensorData = async (sensorType: keyof SensorData) => {
@@ -55,92 +52,117 @@ const Historis: React.FC = () => {
     }
   };
 
-  // Fetch data for all sensors every 10 seconds
-useEffect(() => {
-  // Fetch data pertama kali ketika komponen pertama kali dimuat
-  Object.keys(sensorEndpoints).forEach(sensorType => {
-    fetchSensorData(sensorType as keyof SensorData); // Pastikan ini valid sebagai key dari SensorData
-  });
+  // Function to fetch RTD_Temp data
+  const fetchRtdData = async () => {
+    try {
+      const response = await fetch(sensorEndpoints.RTD_Temp);
+      const data = await response.json();
+      console.log("RTD_Temp Data:", data); // Log RTD_Temp data separately
+      setRtdData(data); // Update RTD_Temp data state
+    } catch (error) {
+      console.error("Error fetching RTD_Temp data:", error);
+    }
+  };
 
-  // Mulai interval untuk fetch data setiap 1 menit (60000ms)
-  const intervalId = setInterval(() => {
+  useEffect(() => {
+    // Fetch data for all sensors except RTD_Temp
     Object.keys(sensorEndpoints).forEach(sensorType => {
-      fetchSensorData(sensorType as keyof SensorData);
+      if (sensorType !== 'RTD_Temp') {
+        fetchSensorData(sensorType as keyof SensorData);
+      }
     });
-  }, 600000); // 60000ms = 1 menit
 
-  // Cleanup on component unmount (untuk menghindari memory leak)
-  return () => clearInterval(intervalId);
-}, []); // Kosong array depedencies agar hanya dijalankan sekali saat komponen pertama kali dimuat
+    // Fetch RTD_Temp data separately
+    fetchRtdData();
 
-   // Structure for charts with dynamic data for each sensor
+    const intervalId = setInterval(() => {
+      // Fetch data for all sensors except RTD_Temp
+      Object.keys(sensorEndpoints).forEach(sensorType => {
+        if (sensorType !== 'RTD_Temp') {
+          fetchSensorData(sensorType as keyof SensorData);
+        }
+      });
+
+      // Fetch RTD_Temp data separately
+      fetchRtdData();
+    }, 600000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  // Structure for charts with dynamic data for each sensor
   const chartData = [
     {
       id: 'suhu-chart',
       title: 'Suhu Ayam',
-      min: Math.min(...(sensorData.suhu?.map(item => item.nilai) || [0])) - 5, // Guard against undefined data
+      min: Math.min(...(sensorData.suhu?.map(item => item.nilai) || [0])) - 5,
       max: Math.max(...(sensorData.suhu?.map(item => item.nilai) || [0])) + 5,
       series: [{ data: sensorData.suhu?.map(item => item.nilai) || [] }],
       chartColor: ['#FF6347'],
+      xaxisCategories: sensorData.suhu?.map(item => item.tanggal) || [],
     },
     {
       id: 'kelembaban-chart',
       title: 'Kelembaban',
-      min: Math.min(...(sensorData.kelembaban?.map(item => item.nilai) || [0])) - 5, // Guard against undefined data
+      min: Math.min(...(sensorData.kelembaban?.map(item => item.nilai) || [0])) - 5,
       max: Math.max(...(sensorData.kelembaban?.map(item => item.nilai) || [0])) + 5,
       series: [{ data: sensorData.kelembaban?.map(item => item.nilai) || [] }],
       chartColor: ['#32CD32'],
+      xaxisCategories: sensorData.kelembaban?.map(item => item.tanggal) || [],
     },
     {
       id: 'co2-level-chart',
       title: 'Kadar CO2',
-      min: 0, // Custom min value for CO2
-      max: 2000, // Custom max value for CO2
+      min: 0,
+      max: 2000,
       series: [{ data: sensorData.CO2?.map(item => item.nilai) || [] }],
       chartColor: ['#1E90FF'],
+      xaxisCategories: sensorData.CO2?.map(item => item.tanggal) || [],
     },
     {
       id: 'nh3-level-chart',
       title: 'Kadar NH3',
-      min: 0, // Custom min value for NH3
-      max: 50, // Custom max value for NH3
+      min: 0,
+      max: 50,
       series: [{ data: sensorData.NH3?.map(item => item.nilai) || [] }],
       chartColor: ['#FFD700'],
+      xaxisCategories: sensorData.NH3?.map(item => item.tanggal) || [],
     },
     {
-      id: 'suhu-lingkungan-chart',
-      title: 'Suhu Lingkungan',
-      min: Math.min(...(sensorData.RTD_Temp?.map(item => item.nilai) || [0])) - 5, // Guard against undefined data
-      max: Math.max(...(sensorData.RTD_Temp?.map(item => item.nilai) || [0])) + 5,
-      series: [{ data: sensorData.RTD_Temp?.map(item => item.nilai) || [] }],
-      chartColor: ['#FF6347'],
+      id: 'rtd-temp-chart',
+      title: 'Suhu Lingkungan (RTD)',
+      min: Math.min(...(rtdData?.map(item => item.nilai) || [0])) - 5,
+      max: Math.max(...(rtdData?.map(item => item.nilai) || [0])) + 5,
+      series: [{ data: rtdData?.map(item => item.nilai) || [] }],
+      chartColor: ['#4B0082'],
+      xaxisCategories: rtdData?.map(item => item.tanggal) || [], // Custom xaxis for RTD_Temp
     },
     {
       id: 'dust-level-chart',
       title: 'Level Debu PM2,5',
-      min: 0, // Custom min value for dust
-      max: 70, // Custom max value for dust
+      min: 0,
+      max: 70,
       series: [{ data: sensorData.PM2_5?.map(item => item.nilai) || [] }],
       chartColor: ['#800080'],
+      xaxisCategories: sensorData.PM2_5?.map(item => item.tanggal) || [],
     },
-    
     {
       id: 'dust10-level-chart',
       title: 'Level Debu PM10',
-      min: 0, // Custom min value for dust
-      max: 70, // Custom max value for dust
+      min: 0,
+      max: 70,
       series: [{ data: sensorData.debu?.map(item => item.nilai) || [] }],
       chartColor: ['#800080'],
+      xaxisCategories: sensorData.debu?.map(item => item.tanggal) || [],
     },
-
-
     {
       id: 'light-level-chart',
       title: 'Level Cahaya',
-      min: 0, // Custom min value for light
-      max: 100, // Custom max value for light
+      min: 0,
+      max: 100,
       series: [{ data: sensorData.cahaya?.map(item => item.nilai) || [] }],
       chartColor: ['#FFD700'],
+      xaxisCategories: sensorData.cahaya?.map(item => item.tanggal) || [],
     },
   ];
 
@@ -148,7 +170,6 @@ useEffect(() => {
     <React.Fragment>
       <h3 className="text-black col-span-12">Data Historis 24 Jam Terakhir</h3>
       <div className="order-5 col-span-12 card 2xl:col-span-12 2xl:row-span-12">
-        
         <div className="card-body">
           <div className="grid grid-cols-1 md:grid-cols-4 2xl:grid-cols-4">
             {chartData.map((item, key) => (
@@ -171,17 +192,17 @@ useEffect(() => {
                         colors: item.chartColor,
                         stroke: { width: 2, curve: 'smooth' },
                         xaxis: {
-                          categories: sensorData.suhu?.map(item => item.tanggal) || [],
+                          categories: item.xaxisCategories, // Use the custom categories for each chart
                           tickAmount: 4,
                           labels: {
-                            show: true, // Disable x-axis labels
+                            show: true,
                           },
                         },
                         yaxis: {
                           title: { text: 'Level' },
-                          min: item.min, // Use the custom min value
-                          max: item.max, // Use the custom max value
-                          tickAmount: 5, // Set the tick amount to 5
+                          min: item.min,
+                          max: item.max,
+                          tickAmount: 5,
                           labels: {
                             formatter: (value: number) => Math.round(value).toString(),
                           },

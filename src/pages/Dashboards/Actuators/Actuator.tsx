@@ -24,7 +24,7 @@ const Actuator = () => {
     const [heaterStatus, setHeaterStatus] = useState(false); // Correct state declaration for heaterStatus
     const [isConfirmed3, setIsConfirmed3] = useState(false);
 
-    const [value, setValue] = useState(50);
+    const [value, setValue] = useState(400);
     const [feedSchedule, setFeedSchedule] = useState<Date | null>(null);
     const [feedAmount, setFeedAmount] = useState(400);
     const [isConfirmed1, setIsConfirmed1] = useState(false);
