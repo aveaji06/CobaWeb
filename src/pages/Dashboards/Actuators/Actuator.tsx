@@ -26,7 +26,7 @@ const Actuator = () => {
 
     const [value, setValue] = useState(50);
     const [feedSchedule, setFeedSchedule] = useState<Date | null>(null);
-    const [feedAmount, setFeedAmount] = useState(360);
+    const [feedAmount, setFeedAmount] = useState(400);
     const [isConfirmed1, setIsConfirmed1] = useState(false);
 
     const [upcomingSchedules, setUpcomingSchedules] = useState<any[]>([]); // State for storing upcoming schedules
@@ -352,7 +352,7 @@ const toggleManualControlStatus = () => {
     set(manualControlRef, newStatus ? "on" : "off"); // Update Firebase with the new status
 };
 
-const isDisabled = manualControlStatus;
+const isDisabled = !manualControlStatus;
 
     return (
         <React.Fragment>
@@ -361,7 +361,7 @@ const isDisabled = manualControlStatus;
     <div className="card-body">
         <div className="flex flex-col items-start">
             <div className="w-full text-center">
-                <h2 className="text-sm font-medium">Manual Control Status</h2>
+                <h2 className="text-sm font-medium">Manual Control</h2>
             </div>
             <div className="flex justify-between w-full">
                 <div className="flex flex-col items-start">
@@ -668,7 +668,7 @@ const isDisabled = manualControlStatus;
                                         max="5000"
                                         value={value}
                                         onChange={handleChange}
-                                        step="20"
+                                        step="100"
                                         className="form-input"
                                         // className="w-full h-8 rounded-md bg-slate-200 dark:bg-zink-600 slider"
                                         id="DefaultRange"
