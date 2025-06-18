@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Flatpickr from 'react-flatpickr';
 import "flatpickr/dist/flatpickr.css";
+import { Indonesian } from "flatpickr/dist/l10n/id.js";  // Import locale Indonesia
 import { 
     EnvironmentComparisonChartSuhu,
     EnvironmentComparisonChartRTDTemp,
@@ -98,7 +99,8 @@ const Forensik = () => {
                         options={{
                             dateFormat: "d M, Y",
                             enableTime: false,
-                            mode: "range", // Memungkinkan pemilihan rentang tanggal
+                            mode: "range",
+                            locale: Indonesian, // Memungkinkan pemilihan rentang tanggal
                             onClose: () => {
                                 if (selectedDateRange) {
                                     const calendar = document.querySelector('.flatpickr-calendar');
@@ -183,7 +185,8 @@ const Forensik = () => {
                         options={{
                             dateFormat: "d M, Y",
                             enableTime: false,
-                            mode: "range", // Memungkinkan pemilihan rentang tanggal
+                            mode: "range",
+                            locale: Indonesian, // Memungkinkan pemilihan rentang tanggal
                             onClose: () => {
                                 if (secondSelectedDateRange) {
                                     const calendar = document.querySelector('.flatpickr-calendar');
