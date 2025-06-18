@@ -43,10 +43,23 @@ const Forensik = () => {
         setSecondSelectedDateRange(null);
     };
 
+
+    
     useEffect(() => {
         if (selectedDateRange) {
-            const startDate = selectedDateRange[0].toLocaleDateString('id-ID');
-            const endDate = selectedDateRange[1].toLocaleDateString('id-ID');
+            const formatDate = (date: Date): string => {
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const year = date.getFullYear();
+                return `${day}/${month}/${year}`;  // Corrected string interpolation
+            };
+
+            const startDate = formatDate(selectedDateRange[0]);
+            const endDate = formatDate(selectedDateRange[1]);
+
+            // Optionally, log the formatted dates or use them for API requests
+            console.log("Formatted Start Date:", startDate);
+            console.log("Formatted End Date:", endDate);
         }
     }, [selectedDateRange]);
 
