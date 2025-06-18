@@ -97,7 +97,7 @@ const Forensik = () => {
                         value={selectedDateRange ? [selectedDateRange[0], selectedDateRange[1]] : []}
                         onChange={handleDateChange}
                         options={{
-                            dateFormat: "d M, Y",
+                            dateFormat: "d/m/Y",
                             enableTime: false,
                             mode: "range",
                             locale: Indonesian, // Memungkinkan pemilihan rentang tanggal
@@ -183,7 +183,7 @@ const Forensik = () => {
                         value={secondSelectedDateRange ? [secondSelectedDateRange[0], secondSelectedDateRange[1]] : []}
                         onChange={handleSecondDateChange}
                         options={{
-                            dateFormat: "d M, Y",
+                            dateFormat: "d/m/Y",
                             enableTime: false,
                             mode: "range",
                             locale: Indonesian, // Memungkinkan pemilihan rentang tanggal
