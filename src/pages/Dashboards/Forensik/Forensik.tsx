@@ -1,74 +1,73 @@
 import React, { useState, useEffect } from 'react';
 import Flatpickr from 'react-flatpickr';
 import "flatpickr/dist/flatpickr.css";
-import { Indonesian } from "flatpickr/dist/l10n/id.js";
-import {
+import { Indonesian } from "flatpickr/dist/l10n/id.js";  // Import locale Indonesia
+import { 
     EnvironmentComparisonChartSuhu,
     EnvironmentComparisonChartRTDTemp,
     EnvironmentComparisonChartKelembaban,
     EnvironmentComparisonChartCO2,
     EnvironmentComparisonChartDebu,
     EnvironmentComparisonChartNH3,
-    EnvironmentComparisonChartPM2_5
+    EnvironmentComparisonChartPM2_5 
 } from './Charts';
 
 const Forensik = () => {
+    // State untuk menyimpan sensor yang dipilih, dengan default kosong
     const [selectedSensor, setSelectedSensor] = useState<string>("");
     const [selectedDateRange, setSelectedDateRange] = useState<[Date, Date] | null>(null);
+
+    // State untuk pilihan sensor kedua dan rentang tanggal kedua
     const [secondSelectedSensor, setSecondSelectedSensor] = useState<string>("");
     const [secondSelectedDateRange, setSecondSelectedDateRange] = useState<[Date, Date] | null>(null);
-
+    
+    // Fungsi untuk menangani perubahan pilihan sensor pertama
     const handleSensorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedSensor(e.target.value);
     };
 
+    // Fungsi untuk menangani perubahan pilihan sensor kedua
     const handleSecondSensorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSecondSelectedSensor(e.target.value);
     };
 
+    // Fungsi untuk menangani perubahan pilihan rentang tanggal pertama
     const handleDateChange = (date: Date[]) => {
         if (date.length === 2) {
             setSelectedDateRange([date[0], date[1]]);
         }
     };
 
+    // Fungsi untuk menangani perubahan pilihan rentang tanggal kedua
     const handleSecondDateChange = (date: Date[]) => {
         if (date.length === 2) {
             setSecondSelectedDateRange([date[0], date[1]]);
         }
     };
 
+    // Fungsi untuk menghapus pilihan sensor kedua dan rentang tanggal keduanya
     const handleRemoveSecondSensor = () => {
-        setSecondSelectedSensor("");
-        setSecondSelectedDateRange(null);
+        setSecondSelectedSensor(""); // Reset sensor kedua
+        setSecondSelectedDateRange(null); // Reset rentang tanggal kedua
     };
 
-
-    
+    // Trigger the fetch immediately when the date range is selected
     useEffect(() => {
         if (selectedDateRange) {
-            const formatDate = (date: Date): string => {
-                const day = String(date.getDate()).padStart(2, '0');
-                const month = String(date.getMonth() + 1).padStart(2, '0');
-                const year = date.getFullYear();
-                return `${day}/${month}/${year}`;  // Corrected string interpolation
-            };
-
-            const startDate = formatDate(selectedDateRange[0]);
-            const endDate = formatDate(selectedDateRange[1]);
-
-            // Optionally, log the formatted dates or use them for API requests
-            console.log("Formatted Start Date:", startDate);
-            console.log("Formatted End Date:", endDate);
+            // Fetch data when the date range is selected
+            const startDate = selectedDateRange[0].toLocaleDateString('id-ID');
+            const endDate = selectedDateRange[1].toLocaleDateString('id-ID');
         }
-    }, [selectedDateRange]);
+    }, [selectedDateRange]); // Run this when the date range changes
 
     return (
         <React.Fragment>
+            {/* Judul "Data Forensik" */}
             <div className="col-span-12">
                 <h1 className="text-xl font-semibold mb-4 dark:text-white text-black">Data Forensik</h1>
             </div>
 
+            {/* Dropdown Pilihan Sensor Pertama */}
             <div className="col-span-12 mb-4">
                 <label htmlFor="sensorSelect" className="mr-2 dark:text-white text-black">Pilih Sensor:</label>
                 <select
@@ -77,7 +76,7 @@ const Forensik = () => {
                     onChange={handleSensorChange}
                     className="form-select dark:bg-gray-700 dark:text-white text-black"
                 >
-                    <option value="" disabled>Pilih Sensor</option>
+                    <option value="" disabled>Pilih Sensor</option> 
                     <option value="suhu">Suhu Ayam</option>
                     <option value="suhuling">Suhu Lingkungan</option>
                     <option value="kelembaban">Kelembaban</option>
@@ -88,6 +87,7 @@ const Forensik = () => {
                 </select>
             </div>
 
+            {/* Pilihan Tanggal Pertama */}
             {selectedSensor && (
                 <div className="col-span-12 mb-4">
                     <label htmlFor="datePicker" className="mr-2 dark:text-white text-black">Pilih Rentang Tanggal:</label>
@@ -97,10 +97,9 @@ const Forensik = () => {
                         value={selectedDateRange ? [selectedDateRange[0], selectedDateRange[1]] : []}
                         onChange={handleDateChange}
                         options={{
-                            locale: Indonesian,
-                            dateFormat: "d/m/Y",
+                            dateFormat: "d M, Y",
                             enableTime: false,
-                            mode: "range",
+                            mode: "range", // Memungkinkan pemilihan rentang tanggal
                             onClose: () => {
                                 if (selectedDateRange) {
                                     const calendar = document.querySelector('.flatpickr-calendar');
@@ -114,28 +113,44 @@ const Forensik = () => {
                 </div>
             )}
 
+            {/* Render Chart Based on Selected Sensor */}
             {selectedSensor && selectedDateRange && selectedSensor === "suhu" && (
-                <EnvironmentComparisonChartSuhu chartId="environmentDataChartSuhu" selectedDateRange={selectedDateRange} />
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartSuhu chartId="environmentDataChartSuhu" selectedDateRange={selectedDateRange} />
+                </div>
             )}
             {selectedSensor && selectedDateRange && selectedSensor === "suhuling" && (
-                <EnvironmentComparisonChartRTDTemp chartId="environmentDataChartSuhuLingkungan" selectedDateRange={selectedDateRange} />
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartRTDTemp chartId="environmentDataChartSuhuLingkungan" selectedDateRange={selectedDateRange} />
+                </div>
             )}
             {selectedSensor && selectedDateRange && selectedSensor === "kelembaban" && (
-                <EnvironmentComparisonChartKelembaban chartId="environmentDataChartKelembaban" selectedDateRange={selectedDateRange} />
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartKelembaban chartId="environmentDataChartKelembaban" selectedDateRange={selectedDateRange} />
+                </div>
             )}
             {selectedSensor && selectedDateRange && selectedSensor === "CO2" && (
-                <EnvironmentComparisonChartCO2 chartId="environmentDataChartCO2" selectedDateRange={selectedDateRange} />
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartCO2 chartId="environmentDataChartCO2" selectedDateRange={selectedDateRange} />
+                </div>
             )}
             {selectedSensor && selectedDateRange && selectedSensor === "NH3" && (
-                <EnvironmentComparisonChartNH3 chartId="environmentDataChartNH3" selectedDateRange={selectedDateRange} />
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartNH3 chartId="environmentDataChartNH3" selectedDateRange={selectedDateRange} />
+                </div>
             )}
             {selectedSensor && selectedDateRange && selectedSensor === "Debu10" && (
-                <EnvironmentComparisonChartDebu chartId="environmentDataChartDebu" selectedDateRange={selectedDateRange} />
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartDebu chartId="environmentDataChartDebu" selectedDateRange={selectedDateRange} />
+                </div>
             )}
             {selectedSensor && selectedDateRange && selectedSensor === "Debu2_5" && (
-                <EnvironmentComparisonChartPM2_5 chartId="environmentDataChartDebu2_5" selectedDateRange={selectedDateRange} />
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartPM2_5 chartId="environmentDataChartDebu2_5" selectedDateRange={selectedDateRange} />
+                </div>
             )}
 
+            {/* Dropdown Pilihan Sensor Kedua setelah grafik pertama */}
             {selectedDateRange && selectedSensor && (
                 <div className="col-span-12 mb-4">
                     <label htmlFor="secondSensorSelect" className="mr-2 dark:text-white text-black">Pilih Sensor Kedua:</label>
@@ -145,18 +160,19 @@ const Forensik = () => {
                         onChange={handleSecondSensorChange}
                         className="form-select dark:bg-gray-700 dark:text-white text-black"
                     >
-                        <option value="" disabled>Pilih Sensor</option>
-                        <option value="suhu">Suhu Ayam</option>
-                        <option value="suhuling">Suhu Lingkungan</option>
-                        <option value="kelembaban">Kelembaban</option>
-                        <option value="CO2">CO2</option>
-                        <option value="NH3">NH3</option>
-                        <option value="Debu10">Debu PM 10</option>
-                        <option value="Debu2_5">Debu PM 2,5</option>
+                    <option value="" disabled>Pilih Sensor</option> 
+                    <option value="suhu">Suhu Ayam</option>
+                    <option value="suhuling">Suhu Lingkungan</option>
+                    <option value="kelembaban">Kelembaban</option>
+                    <option value="CO2">CO2</option>
+                    <option value="NH3">NH3</option>
+                    <option value="Debu10">Debu PM 10</option>
+                    <option value="Debu2_5">Debu PM 2,5</option>
                     </select>
                 </div>
             )}
 
+            {/* Pilihan Tanggal Kedua */}
             {secondSelectedSensor && (
                 <div className="col-span-12 mb-4">
                     <label htmlFor="secondDatePicker" className="mr-2 dark:text-white text-black">Pilih Rentang Tanggal Kedua:</label>
@@ -166,10 +182,10 @@ const Forensik = () => {
                         value={secondSelectedDateRange ? [secondSelectedDateRange[0], secondSelectedDateRange[1]] : []}
                         onChange={handleSecondDateChange}
                         options={{
-                            locale: Indonesian,
                             dateFormat: "d/m/Y",
                             enableTime: false,
-                            mode: "range",
+                            mode: "range", // Memungkinkan pemilihan rentang tanggal
+                            locale: Indonesian,
                             onClose: () => {
                                 if (secondSelectedDateRange) {
                                     const calendar = document.querySelector('.flatpickr-calendar');
@@ -183,28 +199,44 @@ const Forensik = () => {
                 </div>
             )}
 
+            {/* Render Chart Based on Second Selected Sensor */}
             {secondSelectedSensor && secondSelectedDateRange && secondSelectedSensor === "suhu" && (
-                <EnvironmentComparisonChartSuhu chartId="environmentDataChartSuhuSecond" selectedDateRange={secondSelectedDateRange} />
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartSuhu chartId="environmentDataChartSuhuSecond" selectedDateRange={secondSelectedDateRange} />
+                </div>
             )}
+                        {/* Render Chart Based on Second Selected Sensor */}
             {secondSelectedSensor && secondSelectedDateRange && secondSelectedSensor === "suhuling" && (
-                <EnvironmentComparisonChartRTDTemp chartId="environmentDataChartSuhuLingkunganSecond" selectedDateRange={secondSelectedDateRange} />
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartRTDTemp chartId="environmentDataChartSuhuLingkunganSecond" selectedDateRange={secondSelectedDateRange} />
+                </div>
             )}
             {secondSelectedSensor && secondSelectedDateRange && secondSelectedSensor === "kelembaban" && (
-                <EnvironmentComparisonChartKelembaban chartId="environmentDataChartKelembabanSecond" selectedDateRange={secondSelectedDateRange} />
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartKelembaban chartId="environmentDataChartKelembabanSecond" selectedDateRange={secondSelectedDateRange} />
+                </div>
             )}
             {secondSelectedSensor && secondSelectedDateRange && secondSelectedSensor === "CO2" && (
-                <EnvironmentComparisonChartCO2 chartId="environmentDataChartCO2Second" selectedDateRange={secondSelectedDateRange} />
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartCO2 chartId="environmentDataChartCO2Second" selectedDateRange={secondSelectedDateRange} />
+                </div>
             )}
             {secondSelectedSensor && secondSelectedDateRange && secondSelectedSensor === "NH3" && (
-                <EnvironmentComparisonChartNH3 chartId="environmentDataChartNH3Second" selectedDateRange={secondSelectedDateRange} />
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartNH3 chartId="environmentDataChartNH3Second" selectedDateRange={secondSelectedDateRange} />
+                </div>
             )}
             {secondSelectedSensor && secondSelectedDateRange && secondSelectedSensor === "Debu10" && (
-                <EnvironmentComparisonChartDebu chartId="environmentDataChartDebuSecond" selectedDateRange={secondSelectedDateRange} />
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartDebu chartId="environmentDataChartDebuSecond" selectedDateRange={secondSelectedDateRange} />
+                </div>
             )}
             {secondSelectedSensor && secondSelectedDateRange && secondSelectedSensor === "Debu2_5" && (
-                <EnvironmentComparisonChartPM2_5 chartId="environmentDataChartDebu2_5Second" selectedDateRange={secondSelectedDateRange} />
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartPM2_5 chartId="environmentDataChartDebu2_5Second" selectedDateRange={secondSelectedDateRange} />
+                </div>
             )}
-
+            {/* Button to remove second sensor selection */}
             {secondSelectedSensor && (
                 <div className="col-span-12 mb-4">
                     <button
