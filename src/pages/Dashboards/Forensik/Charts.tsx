@@ -11,8 +11,8 @@ const EnvironmentComparisonChartSuhu = ({ chartId, selectedDateRange }: any) => 
 
     useEffect(() => {
         if (selectedDateRange) {
-            const startDate = selectedDateRange[0].toLocaleDateString();
-            const endDate = selectedDateRange[1].toLocaleDateString();
+            const startDate = selectedDateRange[0].toLocaleDateString('id-ID');
+            const endDate = selectedDateRange[1].toLocaleDateString('id-ID');
             fetch(`https://ta-ayam-be.vercel.app/api/forensic/Temperature?start_date=${startDate}&end_date=${endDate}`)
                 .then(res => res.json())
                 .then(data => {
@@ -89,8 +89,8 @@ const EnvironmentComparisonChartRTDTemp = ({ chartId, selectedDateRange }: any) 
 
     useEffect(() => {
         if (selectedDateRange) {
-            const startDate = selectedDateRange[0].toLocaleDateString();
-            const endDate = selectedDateRange[1].toLocaleDateString();
+            const startDate = selectedDateRange[0].toLocaleDateString('id-ID');
+            const endDate = selectedDateRange[1].toLocaleDateString('id-ID');
             fetch(`https://ta-ayam-be.vercel.app/api/forensic/RTD_Temp?start_date=${startDate}&end_date=${endDate}`)
                 .then(res => res.json())
                 .then(data => {
@@ -169,8 +169,8 @@ const EnvironmentComparisonChartKelembaban = ({ chartId, selectedDateRange }: an
 
     useEffect(() => {
         if (selectedDateRange) {
-            const startDate = selectedDateRange[0].toLocaleDateString();
-            const endDate = selectedDateRange[1].toLocaleDateString();
+            const startDate = selectedDateRange[0].toLocaleDateString('id-ID');
+            const endDate = selectedDateRange[1].toLocaleDateString('id-ID');
             fetch(`https://ta-ayam-be.vercel.app/api/forensic/Humidity?start_date=${startDate}&end_date=${endDate}`)
                 .then(res => res.json())
                 .then(data => {
@@ -247,8 +247,8 @@ const EnvironmentComparisonChartCO2 = ({ chartId, selectedDateRange }: any) => {
 
     useEffect(() => {
         if (selectedDateRange) {
-            const startDate = selectedDateRange[0].toLocaleDateString();
-            const endDate = selectedDateRange[1].toLocaleDateString();
+            const startDate = selectedDateRange[0].toLocaleDateString('id-ID');
+            const endDate = selectedDateRange[1].toLocaleDateString('id-ID');
             fetch(`https://ta-ayam-be.vercel.app/api/forensic/CO2?start_date=${startDate}&end_date=${endDate}`)
                 .then(res => res.json())
                 .then(data => {
@@ -325,8 +325,8 @@ const EnvironmentComparisonChartDebu = ({ chartId, selectedDateRange }: any) => 
 
     useEffect(() => {
         if (selectedDateRange) {
-            const startDate = selectedDateRange[0].toLocaleDateString();
-            const endDate = selectedDateRange[1].toLocaleDateString();
+            const startDate = selectedDateRange[0].toLocaleDateString('id-ID');
+            const endDate = selectedDateRange[1].toLocaleDateString('id-ID');
             fetch(`https://ta-ayam-be.vercel.app/api/forensic/PM10?start_date=${startDate}&end_date=${endDate}`)
                 .then(res => res.json())
                 .then(data => {
@@ -404,8 +404,8 @@ const EnvironmentComparisonChartPM2_5 = ({ chartId, selectedDateRange }: any) =>
 
     useEffect(() => {
         if (selectedDateRange) {
-            const startDate = selectedDateRange[0].toLocaleDateString();
-            const endDate = selectedDateRange[1].toLocaleDateString();
+            const startDate = selectedDateRange[0].toLocaleDateString('id-ID');
+            const endDate = selectedDateRange[1].toLocaleDateString('id-ID');
             fetch(`https://ta-ayam-be.vercel.app/api/forensic/PM2_5?start_date=${startDate}&end_date=${endDate}`)
                 .then(res => res.json())
                 .then(data => {
@@ -482,8 +482,8 @@ const EnvironmentComparisonChartNH3 = ({ chartId, selectedDateRange }: any) => {
 
     useEffect(() => {
         if (selectedDateRange) {
-            const startDate = selectedDateRange[0].toLocaleDateString();
-            const endDate = selectedDateRange[1].toLocaleDateString();
+            const startDate = selectedDateRange[0].toLocaleDateString('id-ID');
+            const endDate = selectedDateRange[1].toLocaleDateString('id-ID');
             fetch(`https://ta-ayam-be.vercel.app/api/forensic/NH3?start_date=${startDate}&end_date=${endDate}`)
                 .then(res => res.json())
                 .then(data => {
