@@ -55,8 +55,8 @@ const Forensik = () => {
     useEffect(() => {
         if (selectedDateRange) {
             // Fetch data when the date range is selected
-            const startDate = selectedDateRange[0].toLocaleDateString();
-            const endDate = selectedDateRange[1].toLocaleDateString();
+            const startDate = selectedDateRange[0].toLocaleDateString('id-ID');
+            const endDate = selectedDateRange[1].toLocaleDateString('id-ID');
         }
     }, [selectedDateRange]); // Run this when the date range changes
 
