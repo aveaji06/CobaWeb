@@ -1,5 +1,5 @@
 import React from 'react';
-import {EnvironmentComparisonChartSuhu, EnvironmentComparisonChartKelembaban, EnvironmentComparisonChartCO2, EnvironmentComparisonChartDebu, EnvironmentComparisonChartNH3} from './Charts';
+import {EnvironmentComparisonChartSuhu, EnvironmentComparisonChartKelembaban, EnvironmentComparisonChartCO2, EnvironmentComparisonChartNH3} from './Charts';
 
 const DataHistoris = () => {
     return (
