@@ -1,6 +1,5 @@
 import React from 'react';
 import BreadCrumb from 'Common/BreadCrumb';
-import DataHistoris from './DataHistoris';
 import Forensik from './Forensik';
 
 const EmailDashboard = () => {
