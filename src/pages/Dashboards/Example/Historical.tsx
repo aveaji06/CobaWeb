@@ -7,8 +7,6 @@ interface SensorData {
   kelembaban: { tanggal: string; nilai: number }[];
   CO2: { tanggal: string; nilai: number }[];
   NH3: { tanggal: string; nilai: number }[];
-  debu: { tanggal: string; nilai: number }[];
-  PM2_5: { tanggal: string; nilai: number }[];
   cahaya: { tanggal: string; nilai: number }[];
 }
 
@@ -34,8 +32,6 @@ const Historis: React.FC = () => {
     kelembaban: [],
     CO2: [],
     NH3: [],
-    debu: [],
-    PM2_5: [],
     cahaya: [],
   });
 
@@ -91,6 +87,7 @@ const Historis: React.FC = () => {
   }, []);
 
   // Structure for charts with dynamic data for each sensor
+  // Structure for charts with dynamic data for each sensor
   const chartData = [
     {
       id: 'suhu-chart',
@@ -120,17 +117,8 @@ const Historis: React.FC = () => {
       xaxisCategories: sensorData.CO2?.map(item => item.tanggal) || [],
     },
     {
-      id: 'nh3-level-chart',
-      title: 'Kadar NH3',
-      min: 0,
-      max: 50,
-      series: [{ data: sensorData.NH3?.map(item => item.nilai) || [] }],
-      chartColor: ['#FFD700'],
-      xaxisCategories: sensorData.NH3?.map(item => item.tanggal) || [],
-    },
-    {
       id: 'rtd-temp-chart',
-      title: 'Suhu Lingkungan (RTD)',
+      title: 'Suhu Lingkungan',
       min: Math.min(...(rtdData?.map(item => item.nilai) || [0])) - 5,
       max: Math.max(...(rtdData?.map(item => item.nilai) || [0])) + 5,
       series: [{ data: rtdData?.map(item => item.nilai) || [] }],
@@ -138,23 +126,15 @@ const Historis: React.FC = () => {
       xaxisCategories: rtdData?.map(item => item.tanggal) || [], // Custom xaxis for RTD_Temp
     },
     {
-      id: 'dust-level-chart',
-      title: 'Level Debu PM2,5',
+      id: 'nh3-level-chart',
+      title: 'Kadar NH3',
       min: 0,
-      max: 70,
-      series: [{ data: sensorData.PM2_5?.map(item => item.nilai) || [] }],
-      chartColor: ['#800080'],
-      xaxisCategories: sensorData.PM2_5?.map(item => item.tanggal) || [],
+      max: 25,
+      series: [{ data: sensorData.NH3?.map(item => item.nilai) || [] }],
+      chartColor: ['#FFD700'],
+      xaxisCategories: sensorData.NH3?.map(item => item.tanggal) || [],
     },
-    {
-      id: 'dust10-level-chart',
-      title: 'Level Debu PM10',
-      min: 0,
-      max: 70,
-      series: [{ data: sensorData.debu?.map(item => item.nilai) || [] }],
-      chartColor: ['#800080'],
-      xaxisCategories: sensorData.debu?.map(item => item.tanggal) || [],
-    },
+
     {
       id: 'light-level-chart',
       title: 'Level Cahaya',
@@ -171,7 +151,7 @@ const Historis: React.FC = () => {
       <h3 className="text-black col-span-12">Data Historis 24 Jam Terakhir</h3>
       <div className="order-5 col-span-12 card 2xl:col-span-12 2xl:row-span-12">
         <div className="card-body">
-          <div className="grid grid-cols-1 md:grid-cols-4 2xl:grid-cols-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 2xl:grid-cols-3">
             {chartData.map((item, key) => (
               <div key={key} className="py-1 first:pt-0 md:first:pt-1 md:last:pb-1 last:pb-0 md:px-1 h-50">
                 <div className="flex mb-4">

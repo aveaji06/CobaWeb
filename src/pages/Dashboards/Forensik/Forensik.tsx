@@ -7,9 +7,8 @@ import {
     EnvironmentComparisonChartRTDTemp,
     EnvironmentComparisonChartKelembaban,
     EnvironmentComparisonChartCO2,
-    EnvironmentComparisonChartDebu,
     EnvironmentComparisonChartNH3,
-    EnvironmentComparisonChartPM2_5 
+    EnvironmentComparisonChartLihgt
 } from './Charts';
 
 const Forensik = () => {
@@ -82,8 +81,7 @@ const Forensik = () => {
                     <option value="kelembaban">Kelembaban</option>
                     <option value="CO2">CO2</option>
                     <option value="NH3">NH3</option>
-                    <option value="Debu10">Debu PM 10</option>
-                    <option value="Debu2_5">Debu PM 2,5</option>
+                    <option value="Light">Cahaya</option>
                 </select>
             </div>
 
@@ -139,14 +137,9 @@ const Forensik = () => {
                     <EnvironmentComparisonChartNH3 chartId="environmentDataChartNH3" selectedDateRange={selectedDateRange} />
                 </div>
             )}
-            {selectedSensor && selectedDateRange && selectedSensor === "Debu10" && (
+            {selectedSensor && selectedDateRange && selectedSensor === "Light" && (
                 <div className="col-span-12 w-full">
-                    <EnvironmentComparisonChartDebu chartId="environmentDataChartDebu" selectedDateRange={selectedDateRange} />
-                </div>
-            )}
-            {selectedSensor && selectedDateRange && selectedSensor === "Debu2_5" && (
-                <div className="col-span-12 w-full">
-                    <EnvironmentComparisonChartPM2_5 chartId="environmentDataChartDebu2_5" selectedDateRange={selectedDateRange} />
+                    <EnvironmentComparisonChartLihgt chartId="environmentDataChartLight" selectedDateRange={selectedDateRange} />
                 </div>
             )}
 
@@ -166,8 +159,7 @@ const Forensik = () => {
                     <option value="kelembaban">Kelembaban</option>
                     <option value="CO2">CO2</option>
                     <option value="NH3">NH3</option>
-                    <option value="Debu10">Debu PM 10</option>
-                    <option value="Debu2_5">Debu PM 2,5</option>
+                    <option value="Light">Cahaya</option>
                     </select>
                 </div>
             )}
@@ -226,14 +218,9 @@ const Forensik = () => {
                     <EnvironmentComparisonChartNH3 chartId="environmentDataChartNH3Second" selectedDateRange={secondSelectedDateRange} />
                 </div>
             )}
-            {secondSelectedSensor && secondSelectedDateRange && secondSelectedSensor === "Debu10" && (
+            {secondSelectedSensor && secondSelectedDateRange && secondSelectedSensor === "Light" && (
                 <div className="col-span-12 w-full">
-                    <EnvironmentComparisonChartDebu chartId="environmentDataChartDebuSecond" selectedDateRange={secondSelectedDateRange} />
-                </div>
-            )}
-            {secondSelectedSensor && secondSelectedDateRange && secondSelectedSensor === "Debu2_5" && (
-                <div className="col-span-12 w-full">
-                    <EnvironmentComparisonChartPM2_5 chartId="environmentDataChartDebu2_5Second" selectedDateRange={secondSelectedDateRange} />
+                    <EnvironmentComparisonChartLihgt chartId="environmentDataChartLightSecond" selectedDateRange={secondSelectedDateRange} />
                 </div>
             )}
             {/* Button to remove second sensor selection */}

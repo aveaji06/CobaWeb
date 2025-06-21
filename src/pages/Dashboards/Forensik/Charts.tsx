@@ -318,87 +318,11 @@ const EnvironmentComparisonChartCO2 = ({ chartId, selectedDateRange }: any) => {
     );
 };
 
-// Debu Chart (PM10)
-const EnvironmentComparisonChartDebu = ({ chartId, selectedDateRange }: any) => {
-    const chartColors = useChartColors(chartId);
-    const [datasensor, setSensorData] = useState<any[] | null>(null);
 
-    useEffect(() => {
-        if (selectedDateRange) {
-            const startDate = selectedDateRange[0].toLocaleDateString('id-ID');
-            const endDate = selectedDateRange[1].toLocaleDateString('id-ID');
-            fetch(`https://ta-ayam-be.vercel.app/api/forensic/PM10?start_date=${startDate}&end_date=${endDate}`)
-                .then(res => res.json())
-                .then(data => {
-                    console.log("Sensor Data PM10:", data);
-                    if (Array.isArray(data)) {
-                        setSensorData(data);
-                    } else {
-                        console.error("Data is not an array:", data);
-                        setSensorData([]);
-                    }
-                })
-                .catch(error => {
-                    console.error("Fetch error:", error);
-                    setSensorData([]);
-                });
-        }
-    }, [selectedDateRange]);
-
-    if (!datasensor || !Array.isArray(datasensor)) {
-        return <p>Loading data PM10...</p>;
-    }
-
-    const formattedData = datasensor.map((item) => ({
-        label: dayjs(item.tanggal).locale('id').format("D MMMM YY"),
-        value: item.nilai,
-    }));
-
-    const uniqueLabels = formattedData.map((item, index, self) =>
-        index > 0 && item.label === self[index - 1].label ? "" : item.label
-    );
-
-    const series = [
-        {
-            name: "PM10 Kandang",
-            data: formattedData.map((item) => item.value),
-        },
-    ];
-
-    const options: any = {
-        chart: {
-            height: 350,
-            type: "line",
-            zoom: { enabled: false },
-            toolbar: { show: false },
-        },
-        stroke: {
-            curve: "smooth",
-            width: 2,
-        },
-        dataLabels: { enabled: false },
-        colors: chartColors,
-        xaxis: {
-            categories: uniqueLabels,
-        }
-    };
-
-    return (
-        <div className="chart-container">
-            <h2>Grafik PM10 Kandang</h2>
-            <ReactApexChart
-                options={options}
-                series={series}
-                type="line"
-                height={200}
-            />
-        </div>
-    );
-};
 
 
 // PM2.5 Chart
-const EnvironmentComparisonChartPM2_5 = ({ chartId, selectedDateRange }: any) => {
+const EnvironmentComparisonChartLihgt = ({ chartId, selectedDateRange }: any) => {
     const chartColors = useChartColors(chartId);
     const [datasensor, setSensorData] = useState<any[] | null>(null);
 
@@ -406,10 +330,10 @@ const EnvironmentComparisonChartPM2_5 = ({ chartId, selectedDateRange }: any) =>
         if (selectedDateRange) {
             const startDate = selectedDateRange[0].toLocaleDateString('id-ID');
             const endDate = selectedDateRange[1].toLocaleDateString('id-ID');
-            fetch(`https://ta-ayam-be.vercel.app/api/forensic/PM2_5?start_date=${startDate}&end_date=${endDate}`)
+            fetch(`https://ta-ayam-be.vercel.app/api/forensic/Light?start_date=${startDate}&end_date=${endDate}`)
                 .then(res => res.json())
                 .then(data => {
-                    console.log("Sensor Data PM2_5:", data);
+                    console.log("Sensor Data Cahaya:", data);
                     if (Array.isArray(data)) {
                         setSensorData(data);
                     } else {
@@ -425,7 +349,7 @@ const EnvironmentComparisonChartPM2_5 = ({ chartId, selectedDateRange }: any) =>
     }, [selectedDateRange]);
 
     if (!datasensor || !Array.isArray(datasensor)) {
-        return <p>Loading data PM2_5...</p>;
+        return <p>Loading data Cahaya...</p>;
     }
 
     const formattedData = datasensor.map((item) => ({
@@ -439,7 +363,7 @@ const EnvironmentComparisonChartPM2_5 = ({ chartId, selectedDateRange }: any) =>
 
     const series = [
         {
-            name: "PM2.5 Kandang",
+            name: "Cahaya Kandang",
             data: formattedData.map((item) => item.value),
         },
     ];
@@ -464,7 +388,7 @@ const EnvironmentComparisonChartPM2_5 = ({ chartId, selectedDateRange }: any) =>
 
     return (
         <div className="chart-container">
-            <h2>Grafik PM2.5 Kandang</h2>
+            <h2>Grafik Cahaya Kandang</h2>
             <ReactApexChart
                 options={options}
                 series={series}
@@ -557,7 +481,6 @@ export {
     EnvironmentComparisonChartRTDTemp,
     EnvironmentComparisonChartKelembaban,
     EnvironmentComparisonChartCO2,
-    EnvironmentComparisonChartDebu,
-    EnvironmentComparisonChartPM2_5,
+    EnvironmentComparisonChartLihgt,
     EnvironmentComparisonChartNH3,
 };

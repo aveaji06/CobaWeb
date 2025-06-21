@@ -32,7 +32,7 @@ const SensorCard = ({
   thresholds: Array<{ limit: number; color: string; tooltipText: string }>;
 }) => {
   return (
-<div className={`order-2 md:col-span-6 lg:col-span-3 col-span-12 2xl:order-1 card 2xl:col-span-3 group-data-[skin=bordered]:border-${sensorColor}-500/20 relative overflow-hidden`}>
+<div className={`order-2 md:col-span-6 lg:col-span-4 col-span-12 2xl:order-1 card 2xl:col-span-4 group-data-[skin=bordered]:border-${sensorColor}-500/20 relative overflow-hidden`}>
   <div className="card-body">
     <p className="dark:text-white text-black">{title}</p>
     <div className="flex items-center justify-center dark:text-white text-black">
@@ -184,20 +184,7 @@ useEffect(() => {
         ]}
       />
 
-      <SensorCard
-        title="Kadar NH3"
-        data={sensorData.NH3?.nilai ?? 0}
-        unit="ppm"
-        sensorColor="orange"
-        id="gauge-chart-4"
-        minValue={0}
-        maxValue={100}
-        thresholds={[
-          { limit: 25, color: '#5BE12C', tooltipText: 'OK NH3 level!' },
-          { limit: 50, color: '#F5CD19', tooltipText: 'High NH3 level!' },
-          { limit: 100, color: '#EA4228', tooltipText: 'Too high NH3 level!' },
-        ]}
-      />
+      
       
       <SensorCard
         title="Suhu Lingkungan"
@@ -215,8 +202,21 @@ useEffect(() => {
           { limit: 40, color: '#EA4228', tooltipText: 'Too high temperature!' },
         ]}
       />
-
       <SensorCard
+        title="Kadar NH3"
+        data={sensorData.NH3?.nilai ?? 0}
+        unit="ppm"
+        sensorColor="orange"
+        id="gauge-chart-4"
+        minValue={0}
+        maxValue={100}
+        thresholds={[
+          { limit: 10, color: '#5BE12C', tooltipText: 'OK NH3 level!' },
+          { limit: 25, color: '#F5CD19', tooltipText: 'High NH3 level!' },
+          { limit: 100, color: '#EA4228', tooltipText: 'Too high NH3 level!' },
+        ]}
+      />
+      {/* <SensorCard
         title="Level Debu PM2.5"
         data={sensorData.PM2_5?.nilai ?? 0}
         // unit="ug/m³"
@@ -246,7 +246,7 @@ useEffect(() => {
           { limit: 120, color: '#F5CD19', tooltipText: 'High dust level!' },
           { limit: 150, color: '#EA4228', tooltipText: 'Too high dust level!' },
         ]}
-      />
+      /> */}
 
       <SensorCard
         title="Level Cahaya"

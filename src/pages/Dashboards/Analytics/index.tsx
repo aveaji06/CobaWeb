@@ -11,6 +11,7 @@ import RecentPayroll from './RecentPayroll';
 import Dashboard from "./Dashboard"
 import Ayam from "./Ayam"
 import MortalitasChart from './Mortality';
+import FCRChart from './FCR'
 
 import Spido from "./Spido"
 const HRDashboard = () => {
@@ -34,6 +35,7 @@ const HRDashboard = () => {
                 <div className="mb-200"></div>
                 <div className="mb-200"></div>
                 <MortalitasChart/>
+                <FCRChart/>
                 {/* <Spido/> */}
                 {/* <Dashboard/>
                 <Widgets/>

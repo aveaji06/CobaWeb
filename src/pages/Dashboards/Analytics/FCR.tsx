@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import useChartColors from 'Common/useChartColors'; // Assuming the custom hook is available
 
-const MortalitasChart: React.FC = () => {
-  const [mortalitasData, setMortalitasData] = useState<any[]>([]);
+const FCRChart: React.FC = () => {
+  const [fcrData, setFcrData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true); // Add loading state to track the data fetch
   const [chartOptions, setChartOptions] = useState<any>({}); // Declare chartOptions state
 
-  const chartId = 'mortalitasChart'; // A unique ID for this chart
+  const chartId = 'fcrChart'; // A unique ID for this chart
 
   // Ensure useChartColors returns a valid array (fallback to empty array if undefined)
   const chartColors = useChartColors(chartId) || [];
@@ -15,26 +15,26 @@ const MortalitasChart: React.FC = () => {
 
   useEffect(() => {
     // Fetch the data from the backend
-    fetch('https://ta-ayam-be.vercel.app/day/get_mortalitas')
+    fetch('https://ta-ayam-be.vercel.app/get_fcr')
       .then((response) => response.json())
       .then((data) => {
-        setMortalitasData(data);
+        setFcrData(data);
 
         // Ensure data is available before proceeding
         if (data && Array.isArray(data) && data.length > 0) {
           // Prepare the data for the chart
           const days = data.map((item: any) => `${item.day}`);
-          const mortalitas = data.map((item: any) => item.mortalitas_persen);
+          const fcrValues = data.map((item: any) => item.FCR);
 
-          // Configure chart options (mimicking the format of your provided template)
+          // Configure chart options for a line chart
           const options = {
             chart: {
               height: 350,
-              type: 'line', // Line chart
+              type: 'line',  // Change back to line chart
             },
             plotOptions: {
               line: {
-                curve: 'smooth', // Smooth curve
+                curve: 'smooth',  // Smooth curve for the line chart
               },
             },
             stroke: {
@@ -57,13 +57,13 @@ const MortalitasChart: React.FC = () => {
             },
             yaxis: {
               title: {
-                text: 'Mortalitas (%)', // Title for Y-axis
+                text: 'FCR', // Title for Y-axis
               },
               min: 0,  // Set the minimum value of the Y-axis
               max: 5,  // Set the maximum value of the Y-axis
               labels: {
                 formatter: function (value: number) {
-                  return Math.round(value); // Round values to the nearest integer
+                  return value.toFixed(2); // Display FCR values to two decimal places
                 },
               },
               tickAmount: 6, // Add tick marks along the Y-axis
@@ -81,8 +81,8 @@ const MortalitasChart: React.FC = () => {
             },
             series: [
               {
-                name: 'Mortalitas (%)',
-                data: mortalitas,
+                name: 'FCR',
+                data: fcrValues, // Use the FCR values as data for the line chart
               },
             ],
             colors: chartColors, // Apply dynamic colors
@@ -95,7 +95,7 @@ const MortalitasChart: React.FC = () => {
         setLoading(false); // Set loading to false when data is ready
       })
       .catch((error) => {
-        console.error('Error fetching mortalitas data:', error);
+        console.error('Error fetching FCR data:', error);
         setLoading(false); // Ensure loading is set to false if there's an error
       });
   }, []);
@@ -113,7 +113,7 @@ const MortalitasChart: React.FC = () => {
   return (
     <div className="lg:col-span-6 col-span-12 card 2xl:col-span-6">
       <div>
-        <h3>Mortalitas Chart</h3>
+        <h3>Feed Conversion Ratio</h3>
         <ReactApexChart
           dir="ltr"
           options={chartOptions}
@@ -121,7 +121,7 @@ const MortalitasChart: React.FC = () => {
           data-chart-colors={dataChartColor}
           id={chartId}
           className="grow apex-charts"
-          type="line"  // Set to line chart type
+          type="line"  // Chart type is set to line
           height={350}
         />
       </div>
@@ -129,4 +129,4 @@ const MortalitasChart: React.FC = () => {
   );
 };
 
-export default MortalitasChart;
+export default FCRChart;
