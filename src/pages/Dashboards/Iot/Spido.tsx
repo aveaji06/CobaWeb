@@ -243,7 +243,7 @@ const Spido = () => {
       />
 
       <SensorCard
-        title="Level Cahaya"
+        title="Intensitas Cahaya"
         data={sensorData.Light?.nilai ?? 0}
         unit="Lux"
         sensorColor="yellow"
@@ -251,9 +251,9 @@ const Spido = () => {
         minValue={0}
         maxValue={1000}
         thresholds={[
-          { limit: 200, color: '#5BE12C', tooltipText: 'Baik' },
-          { limit: 400, color: '#F5CD19', tooltipText: 'Cukup terang' },
-          { limit: 1000, color: '#EA4228', tooltipText: 'Terlalu terang' },
+          { limit: 40, color: '#5BE12C', tooltipText: 'Baik' },
+          { limit: 50, color: '#F5CD19', tooltipText: 'Cukup terang' },
+          { limit: 100, color: '#EA4228', tooltipText: 'Terlalu terang' },
         ]}
       />
     </>

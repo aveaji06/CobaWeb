@@ -137,7 +137,7 @@ const Historis: React.FC = () => {
 
     {
       id: 'light-level-chart',
-      title: 'Level Cahaya',
+      title: 'Intensitas Cahaya',
       min: 0,
       max: 100,
       series: [{ data: sensorData.cahaya?.map(item => item.nilai) || [] }],
