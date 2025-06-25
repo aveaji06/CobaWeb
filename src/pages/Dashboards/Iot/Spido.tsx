@@ -133,7 +133,7 @@ useEffect(() => {
   return (
     <React.Fragment>
       <div className="mb-2"></div>
-      <h3 className="text-black col-span-12">Data Sensor Real-Time</h3>
+      <h3 className="text-black col-span-12">Data Sensor</h3>
       <SensorCard
         title="Suhu Ayam"
         data={sensorData.Temperature?.nilai ?? 0}

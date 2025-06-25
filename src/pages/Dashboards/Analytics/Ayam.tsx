@@ -184,7 +184,7 @@ const Ayam: React.FC = () => {
       <div className="md:col-span-3 lg:col-span-3 col-span-12 card 2xl:col-span-3">
         <div className="card-body pt-4">
           <h1 className="text-xl font-semibold mb-4">
-            Day:
+            Umur Ayam:
             <div className="text-2xl font-bold">{day !== null ? day : 'Loading...'}</div>
           </h1>
           <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600" onClick={() => setShowInputDay(true)}>
