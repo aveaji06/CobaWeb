@@ -7,8 +7,6 @@ interface SensorData {
   Light: { nilai: number } | null;
   CO2: { nilai: number } | null;
   NH3: { nilai: number } | null;
-  PM10: { nilai: number } | null;
-  PM2_5: { nilai: number } | null;
   RTD_Temp: { nilai: number } | null;
 }
 
@@ -107,8 +105,6 @@ const Spido = () => {
     Light: null,
     CO2: null,
     NH3: null,
-    PM10: null,
-    PM2_5: null,
     RTD_Temp: null,
   });
 
@@ -129,21 +125,25 @@ const Spido = () => {
     }
   };
 
-  useEffect(() => {
-    fetch('https://ta-ayam-be.vercel.app/day/get_day')
-      .then((res) => res.json())
-      .then((data) => {
-        if (typeof data.day === 'number') {
-          setDayValue(data.day);
-        }
-      })
-      .catch((err) => {
-        console.error('Failed to fetch dayValue:', err);
-      });
-  }, []);
+useEffect(() => {
+  fetch('https://ta-ayam-be.vercel.app/day/get_day')
+    .then((res) => res.json())
+    .then((data) => {
+      const parsedDay = parseInt(data.day); // konversi ke integer
+      if (!isNaN(parsedDay)) {
+        setDayValue(parsedDay);
+        console.log('Parsed day:', parsedDay);
+      } else {
+        console.warn('Received invalid day value:', data.day);
+      }
+    })
+    .catch((err) => {
+      console.error('Failed to fetch dayValue:', err);
+    });
+}, []);
 
   useEffect(() => {
-    const sensorTypes = ['Temperature', 'Humidity', 'Light', 'NH3', 'CO2', 'PM10', 'PM2_5', 'RTD_Temp'];
+    const sensorTypes = ['Temperature', 'Humidity', 'Light', 'NH3', 'CO2', 'RTD_Temp'];
     sensorTypes.forEach((sensorType) => fetchSensorData(sensorType));
 
     const intervalId = setInterval(() => {
@@ -243,7 +243,7 @@ const Spido = () => {
       />
 
       <SensorCard
-        title="Intensitas Cahaya"
+        title="Level Cahaya"
         data={sensorData.Light?.nilai ?? 0}
         unit="Lux"
         sensorColor="yellow"
