@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import GaugeComponent from 'react-gauge-component'; // Ensure you have this dependency installed
+import GaugeComponent from 'react-gauge-component';
 
 interface SensorData {
-  suhu: { nilai: number } | null;
-  kelembaban: { nilai: number } | null;
-  cahaya: { nilai: number } | null;
-  CO2: { nilai: number } | null;
-  NH3: { nilai: number } | null;
-  debu: { nilai: number } | null;
+  Dissolved_Oxygen: { nilai: number } | null;
+  Nitrogen: { nilai: number } | null;
+  Phosphorus: { nilai: number } | null;
+  Salinity: { nilai: number } | null;
+  Soil_EC: { nilai: number } | null;
+  Soil_Moisture: { nilai: number } | null;
+  Soil_Temperature: { nilai: number } | null;
+  Soil_pH: { nilai: number } | null;
 }
+
 
 const SensorCard = ({
   title,
@@ -16,68 +19,39 @@ const SensorCard = ({
   unit,
   sensorColor,
   id,
+  minValue,
+  maxValue,
+  thresholds,
 }: {
   title: string;
   data: number;
   unit: string;
   sensorColor: string;
   id: string;
+  minValue: number;
+  maxValue: number;
+  thresholds: Array<{ limit: number; color: string; tooltipText: string }>;
 }) => {
   return (
-    <div className={`order-2 md:col-span-6 lg:col-span-6 col-span-12 2xl:order-1 card 2xl:col-span-4 group-data-[skin=bordered]:border-${sensorColor}-500/20 relative overflow-hidden`}>
+    <div className={`order-2 md:col-span-6 lg:col-span-4 col-span-12 2xl:order-1 card 2xl:col-span-4 group-data-[skin=bordered]:border-${sensorColor}-500/20 relative overflow-hidden`}>
       <div className="card-body">
-        {/* Displaying GaugeComponent */}
-        <div className="flex items-center justify-center text-black"> {/* Set text color to black */}
-          <div className="w-72">
+        <p className="dark:text-white text-black">{title}</p>
+        <div className="flex items-center justify-center dark:text-white text-black">
+          <div className="w-21">
             <GaugeComponent
               type="semicircle"
               arc={{
                 width: 0.2,
                 padding: 0.005,
                 cornerRadius: 1,
-                subArcs: [
-                  {
-                    limit: 15,
-                    color: '#EA4228',
-                    showTick: true,
-                    tooltip: {
-                      text: 'Too low temperature!',
-                    },
-                    onClick: () => console.log('Too low temperature clicked'),
-                    onMouseMove: () => console.log('Mouse moved over low temperature'),
-                    onMouseLeave: () => console.log('Mouse left the low temperature area'),
+                subArcs: thresholds.map((threshold) => ({
+                  limit: threshold.limit,
+                  color: threshold.color,
+                  showTick: true,
+                  tooltip: {
+                    text: threshold.tooltipText,
                   },
-                  {
-                    limit: 17,
-                    color: '#F5CD19',
-                    showTick: true,
-                    tooltip: {
-                      text: 'Low temperature!',
-                    },
-                  },
-                  {
-                    limit: 28,
-                    color: '#5BE12C',
-                    showTick: true,
-                    tooltip: {
-                      text: 'OK temperature!',
-                    },
-                  },
-                  {
-                    limit: 30,
-                    color: '#F5CD19',
-                    showTick: true,
-                    tooltip: {
-                      text: 'High temperature!',
-                    },
-                  },
-                  {
-                    color: '#EA4228',
-                    tooltip: {
-                      text: 'Too high temperature!',
-                    },
-                  },
-                ],
+                })),
               }}
               pointer={{
                 color: '#345243',
@@ -86,52 +60,51 @@ const SensorCard = ({
               }}
               labels={{
                 valueLabel: {
-                  formatTextValue: (value: number) => value + 'ºC',
-                  style: { fill: 'black' },  // Set inner text to black here
+                  formatTextValue: (value: number) => value + unit,
+                  style: { fontSize: 24, fill: 'currentColor' },
                 },
                 tickLabels: {
                   type: 'outer',
                   defaultTickValueConfig: {
-                    formatTextValue: (value: number) => value + 'ºC',
-                    style: { fontSize: 10, fill: 'black' },  // Set tick labels text to black
+                    formatTextValue: (value: number) => String(value),
+                    style: { fontSize: 10, fill: 'currentColor' },
                   },
                   ticks: [
-                    { value: 13 },
-                    { value: 22.5 },
-                    { value: 32 },
+                    { value: minValue },
+                    { value: maxValue },
                   ],
                 },
               }}
               value={data}
-              minValue={10}
-              maxValue={35}
-              // Removed textColor prop as it's not supported
+              minValue={minValue}
+              maxValue={maxValue}
             />
           </div>
         </div>
-        <p className="text-black">{title}</p> {/* Set text color of title to black */}
       </div>
     </div>
   );
 };
 
 const Spido = () => {
-  // Initialize state for sensor data with correct types
   const [sensorData, setSensorData] = useState<SensorData>({
-    suhu: null,
-    kelembaban: null,
-    cahaya: null,
-    CO2: null,
-    NH3: null,
-    debu: null,
+    Dissolved_Oxygen: null,
+    Nitrogen: null,
+    Phosphorus: null,
+    Salinity: null,
+    Soil_EC: null,
+    Soil_Moisture: null,
+    Soil_Temperature: null,
+    Soil_pH: null,
   });
 
-  // Generic function to fetch data for each sensor
+  const [dayValue, setDayValue] = useState<number>(1);
+
   const fetchSensorData = async (sensorType: string) => {
     try {
-      const response = await fetch(`https://ta-ayam-be.vercel.app/api/latest/${sensorType}`);
+      // const response = await fetch(`https://ta-ayam-be.vercel.app/api/latestikan/${sensorType}`);
+      const response = await fetch(`http://127.0.0.1:5000/api/latestikan/${sensorType}`);
       const data = await response.json();
-
       if (data && data.nilai !== undefined) {
         setSensorData((prevData) => ({
           ...prevData,
@@ -143,83 +116,121 @@ const Spido = () => {
     }
   };
 
+
+
   useEffect(() => {
-    // Fetch data for all sensors on component mount
-    const sensorTypes = ['suhu', 'kelembaban', 'cahaya', 'NH3', 'CO2', 'debu'];
-    sensorTypes.forEach((sensorType) => {
-      fetchSensorData(sensorType); // Call the function to fetch the data
-    });
+    const sensorTypes = ['Dissolved_Oxygen', 'Nitrogen', 'Phosphorus', 'Salinity', 'Soil_EC', 'Soil_Moisture', 'Soil_Temperature', 'Soil_pH'];
+    sensorTypes.forEach((sensorType) => fetchSensorData(sensorType));
 
-    // Optionally, set up polling for real-time updates (every 10 seconds)
     const intervalId = setInterval(() => {
-      sensorTypes.forEach((sensorType) => {
-        fetchSensorData(sensorType);
-      });
-    }, 10000); // 10 second interval
+      sensorTypes.forEach((sensorType) => fetchSensorData(sensorType));
+    }, 10000);
 
-    // Clean up the interval on component unmount
     return () => clearInterval(intervalId);
   }, []);
 
-  return (
-    <React.Fragment>
-      {/* Space between cards */}
-      <div className="mb-4"></div>
 
-      {/* Temperature Card with Gauge Component */}
+  return (
+    <>
+      <div className="mb-2"></div>
+      <h3 className="text-black col-span-12">Data Terbaru Sensor Ikan</h3>
+
       <SensorCard
-        title="Avg Temperature"
-        data={sensorData.suhu?.nilai ?? 0}
+        title="Suhu Air"
+        data={sensorData.Soil_Temperature?.nilai ?? 0}
         unit="°C"
         sensorColor="red"
-        id="gauge-chart-1"
+        id="gauge-temp-ayam"
+        minValue={10}
+        maxValue={40}
+        thresholds={[
+          { limit: 25-1, color: '#EA4228', tooltipText: 'Terlalu Rendah' },
+          { limit: 25, color: '#F5CD19', tooltipText: 'Sedikit Rendah' },
+          { limit: 27, color: '#5BE12C', tooltipText: 'Ideal' },
+          { limit: 27 + 1, color: '#F5CD19', tooltipText: 'Sedikit Tinggi' },
+          { limit: 40, color: '#EA4228', tooltipText: 'Terlalu Tinggi' },
+        ]}
       />
 
-      {/* Humidity Card with Gauge Component */}
+
+
       <SensorCard
-        title="Kelembaban"
-        data={sensorData.kelembaban?.nilai ?? 0}
-        unit="%"
+        title="Kadar Nitrogen Air"
+        data={sensorData.Soil_Moisture?.nilai ?? 0}
+        unit="ppm"
         sensorColor="blue"
-        id="gauge-chart-2"
+        id="gauge-humidity"
+        minValue={0}
+        maxValue={100}
+        thresholds={[
+          { limit:10, color: '#5BE12C', tooltipText: 'Aman' },
+          { limit: 50, color: '#F5CD19', tooltipText: 'Tinggi' },
+          { limit: 100, color: '#EA4228', tooltipText: 'Berbahaya'},
+        ]}
       />
 
-      {/* CO2 Level Card with Gauge Component */}
+      {/* Sensor lainnya tetap seperti sebelumnya */}
       <SensorCard
-        title="Kadar CO2"
-        data={sensorData.CO2?.nilai ?? 0}
-        unit="ppm"
+        title="Dissolved Oxygen"
+        data={sensorData.Dissolved_Oxygen?.nilai ?? 0}
+        unit="mg/L"
         sensorColor="green"
-        id="gauge-chart-3"
+        id="gauge-co2"
+        minValue={0}
+        maxValue={10}
+        thresholds={[
+          { limit: 2, color: '#EA4228', tooltipText: 'Berbahaya'},
+          { limit: 3, color: '#F5CD19', tooltipText: 'Tinggi' },
+          { limit: 5, color: '#5BE12C', tooltipText: 'Aman' },
+        ]}
+      />
+            <SensorCard
+        title="pH Air"
+        data={sensorData.Soil_pH?.nilai ?? 0}
+        unit=""
+        sensorColor="red"
+        id="gauge-temp-env"
+        minValue={0}
+        maxValue={14}
+        thresholds={[
+          { limit: 6-1, color: '#EA4228', tooltipText: 'Terlalu Rendah' },
+          { limit: 6  , color: '#F5CD19', tooltipText: 'Sedikit Rendah' },
+          { limit: 8.4, color: '#5BE12C', tooltipText: 'Ideal' },
+          { limit: 8.4 + 1, color: '#F5CD19', tooltipText: 'Sedikit Tinggi' },
+          { limit: 14, color: '#EA4228', tooltipText: 'Terlalu Tinggi' },
+        ]}
       />
 
-      {/* NH3 Level Card with Gauge Component */}
       <SensorCard
-        title="Kadar NH3"
-        data={sensorData.NH3?.nilai ?? 0}
-        unit="ppm"
+        title="Kadar Fosfor"
+        data={sensorData.Phosphorus?.nilai ?? 0}
+        unit="mg/L"
         sensorColor="orange"
-        id="gauge-chart-4"
+        id="gauge-nh3"
+        minValue={0}
+        maxValue={0.5}
+        thresholds={[
+          { limit: 0.002, color: '#EA4228', tooltipText: 'Berbahaya'},
+          { limit: 0.050, color: '#F5CD19', tooltipText: 'Tinggi' },
+          { limit: 0.100, color: '#5BE12C', tooltipText: 'Aman' },
+        ]}
       />
 
-      {/* Dust Level Card with Gauge Component */}
       <SensorCard
-        title="Level Debu"
-        data={sensorData.debu?.nilai ?? 0}
-        unit="ug/m³"
-        sensorColor="purple"
-        id="gauge-chart-5"
-      />
-
-      {/* Light Level Card with Gauge Component */}
-      <SensorCard
-        title="Level Cahaya"
-        data={sensorData.cahaya?.nilai ?? 0}
-        unit="Lux"
+        title="Kadar salinitas"
+        data={sensorData.Salinity?.nilai ?? 0}
+        unit="ppt"
         sensorColor="yellow"
-        id="gauge-chart-6"
+        id="gauge-light"
+        minValue={0}
+        maxValue={1.5}
+        thresholds={[
+          { limit: 0.5, color: '#5BE12C', tooltipText: 'Aman' },
+          { limit: 0.6, color: '#F5CD19', tooltipText: 'Tinggi' },
+          { limit: 1, color: '#EA4228', tooltipText: 'Berbahaya'},
+        ]}
       />
-    </React.Fragment>
+    </>
   );
 };
 

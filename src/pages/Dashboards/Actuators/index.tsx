@@ -3,8 +3,9 @@ import BreadCrumb from 'Common/BreadCrumb';
 import Actuator from './Actuator';
 import { useNavigate } from 'react-router-dom';
 import Dashboard from './filter';
+import useIdleLogout from "hooks/useIdleLogout";
 const Ecommerce = () => {
-
+useIdleLogout();
     const navigate = useNavigate();
     useEffect(() => navigate("/dashboards-automatic"), [navigate]);
 

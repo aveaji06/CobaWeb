@@ -8,7 +8,14 @@ import {
     EnvironmentComparisonChartKelembaban,
     EnvironmentComparisonChartCO2,
     EnvironmentComparisonChartNH3,
-    EnvironmentComparisonChartLihgt
+    EnvironmentComparisonChartLihgt,
+    EnvironmentComparisonChartDO,
+    EnvironmentComparisonChartFosfor,
+    EnvironmentComparisonChartNitrate,
+    EnvironmentComparisonChartNitrogen,
+    EnvironmentComparisonChartSalinity,
+    EnvironmentComparisonChartSuhuAir,
+    EnvironmentComparisonChartpH
 } from './Charts';
 
 const Forensik = () => {
@@ -59,6 +66,7 @@ const Forensik = () => {
         }
     }, [selectedDateRange]); // Run this when the date range changes
 
+
     return (
         <React.Fragment>
             {/* Judul "Data Forensik" */}
@@ -77,11 +85,17 @@ const Forensik = () => {
                 >
                     <option value="" disabled>Pilih Sensor</option> 
                     <option value="suhu">Suhu Ayam</option>
-                    <option value="suhuling">Suhu Lingkungan</option>
-                    <option value="kelembaban">Kelembaban</option>
-                    <option value="CO2">CO2</option>
-                    <option value="NH3">NH3</option>
+                    <option value="suhuling">Suhu Lingkungan Kandang Ayam</option>
+                    <option value="kelembaban">Kelembaban Ayam</option>
+                    <option value="CO2">Kadar CO2</option>
+                    <option value="NH3">Kadar Amonia</option>
                     <option value="Light">Cahaya</option>
+                    <option value="DO">Dissolved Oxygen</option>
+                    <option value="suhuair">Suhu Air</option>
+                    <option value="pH">pH Air</option>
+                    <option value="nitrogen">Nitrogen</option>
+                    <option value="phosphorus">Fosfor</option>
+                    <option value="salinity">Salinity</option>
                 </select>
             </div>
 
@@ -141,7 +155,45 @@ const Forensik = () => {
                 <div className="col-span-12 w-full">
                     <EnvironmentComparisonChartLihgt chartId="environmentDataChartLight" selectedDateRange={selectedDateRange} />
                 </div>
+            //Ikan
             )}
+                        {/* Render Chart Based on Selected Sensor */}
+            {selectedSensor && selectedDateRange && selectedSensor === "DO" && (
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartDO chartId="environmentDataChartDO" selectedDateRange={selectedDateRange} />
+                </div>
+            )}
+            {selectedSensor && selectedDateRange && selectedSensor === "suhuair" && (
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartSuhuAir chartId="environmentDataChartsuhuair" selectedDateRange={selectedDateRange} />
+                </div>
+            )}
+            {selectedSensor && selectedDateRange && selectedSensor === "pH" && (
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartpH chartId="environmentDataChartpH" selectedDateRange={selectedDateRange} />
+                </div>
+            )}
+            {selectedSensor && selectedDateRange && selectedSensor === "nitrate" && (
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartNitrate chartId="environmentDataChartnitrate" selectedDateRange={selectedDateRange} />
+                </div>
+            )}
+                        {selectedSensor && selectedDateRange && selectedSensor === "nitrogen" && (
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartNitrogen chartId="environmentDataChartNitrogen" selectedDateRange={selectedDateRange} />
+                </div>
+            )}
+            {selectedSensor && selectedDateRange && selectedSensor === "phosphorus" && (
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartFosfor chartId="environmentDataChartphosphorus" selectedDateRange={selectedDateRange} />
+                </div>
+            )}
+            {selectedSensor && selectedDateRange && selectedSensor === "salinity" && (
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartSalinity chartId="environmentDataChartsalinity" selectedDateRange={selectedDateRange} />
+                </div>
+            )}
+            
 
             {/* Dropdown Pilihan Sensor Kedua setelah grafik pertama */}
             {selectedDateRange && selectedSensor && (
@@ -155,12 +207,18 @@ const Forensik = () => {
                     >
                     <option value="" disabled>Pilih Sensor</option> 
                     <option value="suhu">Suhu Ayam</option>
-                    <option value="suhuling">Suhu Lingkungan</option>
-                    <option value="kelembaban">Kelembaban</option>
-                    <option value="CO2">CO2</option>
-                    <option value="NH3">NH3</option>
+                    <option value="suhuling">Suhu Lingkungan Kandang Ayam</option>
+                    <option value="kelembaban">Kelembaban Ayam</option>
+                    <option value="CO2">Kadar CO2</option>
+                    <option value="NH3">Kadar Amonia</option>
                     <option value="Light">Cahaya</option>
-                    </select>
+                    <option value="DO">Dissolved Oxygen</option>
+                    <option value="suhuair">Suhu Air</option>
+                    <option value="pH">pH Air</option>
+                    <option value="nitrogen">Nitrogen</option>
+                    <option value="phosphorus">Fosfor</option>
+                    <option value="salinity">Salinity</option>
+                </select>
                 </div>
             )}
 
@@ -174,10 +232,9 @@ const Forensik = () => {
                         value={secondSelectedDateRange ? [secondSelectedDateRange[0], secondSelectedDateRange[1]] : []}
                         onChange={handleSecondDateChange}
                         options={{
-                            dateFormat: "d/m/Y",
+                            dateFormat: "d M, Y",
                             enableTime: false,
                             mode: "range", // Memungkinkan pemilihan rentang tanggal
-                            locale: Indonesian,
                             onClose: () => {
                                 if (secondSelectedDateRange) {
                                     const calendar = document.querySelector('.flatpickr-calendar');
@@ -221,6 +278,44 @@ const Forensik = () => {
             {secondSelectedSensor && secondSelectedDateRange && secondSelectedSensor === "Light" && (
                 <div className="col-span-12 w-full">
                     <EnvironmentComparisonChartLihgt chartId="environmentDataChartLightSecond" selectedDateRange={secondSelectedDateRange} />
+                </div>
+            )}
+
+            {/* Ikan */}
+            {/* Render Chart Based on Second Selected Sensor */}
+            {secondSelectedSensor && secondSelectedDateRange && secondSelectedSensor === "DO" && (
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartDO chartId="environmentDataChartDOSecond" selectedDateRange={secondSelectedDateRange} />
+                </div>
+            )}
+            {secondSelectedSensor && secondSelectedDateRange && secondSelectedSensor === "suhuair" && (
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartSuhuAir chartId="environmentDataChartsuhuairSecond" selectedDateRange={secondSelectedDateRange} />
+                </div>
+            )}
+            {secondSelectedSensor && secondSelectedDateRange && secondSelectedSensor === "pH" && (
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartpH chartId="environmentDataChartpHSecond" selectedDateRange={secondSelectedDateRange} />
+                </div>
+            )}
+            {secondSelectedSensor && secondSelectedDateRange && secondSelectedSensor === "nitrate" && (
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartNitrate chartId="environmentDataChartnitrateSecond" selectedDateRange={secondSelectedDateRange} />
+                </div>
+            )}
+            {secondSelectedSensor && secondSelectedDateRange && secondSelectedSensor === "nitrogen" && (
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartNitrogen chartId="environmentDataChartnitrogenSecond" selectedDateRange={secondSelectedDateRange} />
+                </div>
+            )}
+            {secondSelectedSensor && secondSelectedDateRange && secondSelectedSensor === "phosphorus" && (
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartFosfor chartId="environmentDataChartphosphorusSecond" selectedDateRange={secondSelectedDateRange} />
+                </div>
+            )}
+            {secondSelectedSensor && secondSelectedDateRange && secondSelectedSensor === "salinity" && (
+                <div className="col-span-12 w-full">
+                    <EnvironmentComparisonChartSalinity chartId="environmentDataChartsalinitySecond" selectedDateRange={secondSelectedDateRange} />
                 </div>
             )}
             {/* Button to remove second sensor selection */}

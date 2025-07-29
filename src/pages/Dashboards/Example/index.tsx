@@ -2,10 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import CountUp from 'react-countup';
 import BreadCrumb from 'Common/BreadCrumb';
-
+import useIdleLogout from "hooks/useIdleLogout";
 import Historical from "./Historical"
 const HRDashboard = () => {
-
+useIdleLogout();
     return (
         <React.Fragment>
             <div className="grid grid-cols-12 2xl:grid-cols-12 gap-x-5">

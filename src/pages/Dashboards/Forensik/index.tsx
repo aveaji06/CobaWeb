@@ -1,9 +1,9 @@
 import React from 'react';
 import BreadCrumb from 'Common/BreadCrumb';
 import Forensik from './Forensik';
-
+import useIdleLogout from "hooks/useIdleLogout";
 const EmailDashboard = () => {
-
+useIdleLogout();
     return (
         <React.Fragment>
             {/* <BreadCrumb title='Historical Data' pageTitle='Dashboards' /> */}

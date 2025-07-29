@@ -23,7 +23,8 @@ import {
     UserRound,
     HeartPulse,
     BarChart,
-    LucideLineChart
+    LucideLineChart,
+    Fish
 }
     from "lucide-react";
 
@@ -34,9 +35,16 @@ const menuData: any = [
     },
     {
         id: "dashboard",
-        label: 'Dashboards',
+        label: 'Sensor Ayam',
         link: "/dashboard",
         icon: <MonitorDot />,
+
+    },
+        {
+        id: "example1",
+        label: 'Sensor Ikan',
+        link: "/dashboards-example1",
+        icon: <Fish/>,
 
     },
         {
@@ -70,13 +78,7 @@ const menuData: any = [
 
 
 
-    // {
-    //     id: "example1",
-    //     label: 'Example 1',
-    //     link: "/dashboards-example1",
-    //     icon: <Sprout/>,
 
-    // },
 
 
     //     {

@@ -5,8 +5,9 @@ import VideoPlayer from './Video'
 import Historis from './Historical';
 import Dashboard from "./Dashboard";
 import Spido from "./Spido"
+import useIdleLogout from "hooks/useIdleLogout";
 const Analytics = () => {
-
+useIdleLogout();
   return (
     <React.Fragment>
       {/* <BreadCrumb title='Dashboard' pageTitle='Dashboards' /> */}

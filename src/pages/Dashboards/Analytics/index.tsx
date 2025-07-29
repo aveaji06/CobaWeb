@@ -12,10 +12,10 @@ import Dashboard from "./Dashboard"
 import Ayam from "./Ayam"
 import MortalitasChart from './Mortality';
 import FCRChart from './FCR'
-
+import useIdleLogout from "hooks/useIdleLogout";
 import Spido from "./Spido"
 const HRDashboard = () => {
-
+useIdleLogout();
     return (
         <React.Fragment>
             <div className="grid grid-cols-12 2xl:grid-cols-12 gap-x-2 pt-2">

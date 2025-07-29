@@ -1,42 +1,35 @@
 import { ThunkAction } from "redux-thunk";
 import { RootState } from "slices";
 import { Action, Dispatch } from "redux";
-import { postFakeRegister } from "helpers/fakebackend_helper";
+import { ref, set } from "firebase/database";
 import { registerFailed, registerSuccess, resetRegister } from "./reducer";
-import { getFirebaseBackend } from "helpers/firebase_helper";
+import { database } from "config/config";
 
 interface User {
-    email: string;
-    username: string;
-    password: string;
+  username: string;
+  password: string;
 }
 
-export const registerUser = (user: User
+export const registerUser = (
+  user: User
 ): ThunkAction<void, RootState, unknown, Action<string>> => async (dispatch: Dispatch) => {
-    try {
-        let response: any;
-        if (process.env.REACT_APP_DEFAULTAUTH === "fake") {
-            response = await postFakeRegister(user);
-        } else if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
-            
-            // initialize relevant method of both Auth
-            const fireBaseBackend = getFirebaseBackend();
+  try {
+    // Simpan data ke path Akun/{username} dengan key Password
+    await set(ref(database, `Akun/${user.username}`), {
+      Password: user.password,
+    });
 
-            response = fireBaseBackend.registerUser(user.email, user.password);
-        }
-        if (response) {
-            dispatch(registerSuccess(response));
-        }
-    } catch (error) {
-        dispatch(registerFailed(error));
-    }
+    dispatch(registerSuccess(user.username));
+  } catch (error: any) {
+    dispatch(registerFailed(error.message || "Gagal register"));
+  }
 };
 
 export const resetRegisterFlag = () => {
-    try {
-        const response = resetRegister(false);
-        return response;
-    } catch (error) {
-        return error;
-    }
+  try {
+    const response = resetRegister(false);
+    return response;
+  } catch (error) {
+    return error;
+  }
 };
