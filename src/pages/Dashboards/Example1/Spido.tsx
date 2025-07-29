@@ -102,8 +102,8 @@ const Spido = () => {
 
   const fetchSensorData = async (sensorType: string) => {
     try {
-      // const response = await fetch(`https://ta-ayam-be.vercel.app/api/latestikan/${sensorType}`);
-      const response = await fetch(`http://127.0.0.1:5000/api/latestikan/${sensorType}`);
+      const response = await fetch(`https://ta-ayam-be.vercel.app/api/latestikan/${sensorType}`);
+      // const response = await fetch(`http://127.0.0.1:5000/api/latestikan/${sensorType}`);
       const data = await response.json();
       if (data && data.nilai !== undefined) {
         setSensorData((prevData) => ({
